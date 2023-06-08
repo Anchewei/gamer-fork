@@ -380,6 +380,7 @@ void SetBFieldIC( real magnetic[], const double x, const double y, const double 
 //
 // Return      :  ParMass, ParPosX/Y/Z, ParVelX/Y/Z, ParTime, ParType, AllAttribute
 //-------------------------------------------------------------------------------------------------------
+#  ifdef PARTICLE
 void Par_Init_ByFunction( const long NPar_ThisRank, const long NPar_AllRank,
                           real *ParMass, real *ParPosX, real *ParPosY, real *ParPosZ,
                           real *ParVelX, real *ParVelY, real *ParVelZ, real *ParTime,
@@ -387,7 +388,7 @@ void Par_Init_ByFunction( const long NPar_ThisRank, const long NPar_AllRank,
 {
    // we only use star particles, so keep here empty.
 }  // FUNCTION : Par_Init_ByFunction
-
+#  endif
 
 //-------------------------------------------------------------------------------------------------------
 // Function    :  Init_TestProb_Hydro_CF
