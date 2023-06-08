@@ -73,9 +73,9 @@ void Validate()
    Aux_Error( ERROR_INFO, "MODEL != HYDRO !!\n" );
 #  endif
 
-#  ifndef GRAVITY
-   Aux_Error( ERROR_INFO, "GRAVITY must be enabled !!\n" );
-#  endif
+// #  ifndef GRAVITY
+//    Aux_Error( ERROR_INFO, "GRAVITY must be enabled !!\n" );
+// #  endif
 
 #  ifdef PARTICLE
    if ( OPT__INIT == INIT_BY_FUNCTION  &&  amr->Par->Init != PAR_INIT_BY_FUNCTION )
