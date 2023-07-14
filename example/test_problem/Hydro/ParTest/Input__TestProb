@@ -1,0 +1,5 @@
+# problem-specific runtime parameters
+ParM        1.0       # Particle Masss in Msun [1.0]
+BackDen     1e-27     # Background gas density in g/cm3 [1e-27]
+RanVelL     0.0       # Lower-limit of particle veolocity in km/s [0.0]
+RanVelH     20.0      # Upper-limit of particle veolocity in km/s [1.0]

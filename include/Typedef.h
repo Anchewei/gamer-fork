@@ -58,6 +58,7 @@ const TestProbID_t
    TESTPROB_HYDRO_ZELDOVICH                    =  101,
    TESTPROB_HYDRO_CF                           =  150,
    TESTPROB_HYDRO_BB_TEST                      =  151,
+   TESTPROB_HYDRO_ParTest                      =  152,
    TESTPROB_ELBDM_EXTPOT                       = 1000;
 
 
