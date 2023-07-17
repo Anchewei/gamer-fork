@@ -322,7 +322,7 @@ void SetBFieldIC( real magnetic[], const double x, const double y, const double 
 //
 // Return      :  ParMass, ParPosX/Y/Z, ParVelX/Y/Z, ParTime, ParType, AllAttribute
 //-------------------------------------------------------------------------------------------------------
-void Par_Init_ByFunction( const long NPar_ThisRank, const long NPar_AllRank,
+void Par_Init_ByFunction_ParTest( const long NPar_ThisRank, const long NPar_AllRank,
                           real *ParMass, real *ParPosX, real *ParPosY, real *ParPosZ,
                           real *ParVelX, real *ParVelY, real *ParVelZ, real *ParTime,
                           real *ParType, real *AllAttribute[PAR_NATT_TOTAL] )
@@ -462,7 +462,7 @@ void Init_TestProb_Hydro_ParTest()
    Poi_UserWorkBeforePoisson_Ptr     = NULL; // option: none;                         example: SelfGravity/Poi_UserWorkBeforePoisson.cpp
 #  endif
 #  ifdef PARTICLE
-   Par_Init_ByFunction_Ptr           = Par_Init_ByFunction; // option: PAR_INIT=1;                   example: Particle/Par_Init_ByFunction.cpp
+   Par_Init_ByFunction_Ptr           = Par_Init_ByFunction_ParTest; // option: PAR_INIT=1;                   example: Particle/Par_Init_ByFunction.cpp
    Par_Init_Attribute_User_Ptr       = NULL; // set PAR_NATT_USER;                    example: TestProblem/Hydro/AGORA_IsolatedGalaxy/Init_TestProb_Hydro_AGORA_IsolatedGalaxy.cpp --> AddNewParticleAttribute()
 #  endif
 #  if ( EOS == EOS_USER )
