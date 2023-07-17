@@ -332,8 +332,9 @@ void Par_Init_ByFunction( const long NPar_ThisRank, const long NPar_AllRank,
 
    const double BoxSize[3]   = { amr->BoxSize[0], amr->BoxSize[1], amr->BoxSize[2] };
    const real   ParDist      = BoxSize[0]/(2*9);                          // distance betwwen adjacent particles
+   const double Radius       = BoxSize[0]/(2*10)
 
-   double RanV, RanVec[3];
+   double RanPos, RanV, RanVec[3];
 
 // only the master rank will construct the initial condition
    if ( MPI_Rank == 0 )
@@ -358,13 +359,10 @@ void Par_Init_ByFunction( const long NPar_ThisRank, const long NPar_AllRank,
       {
          ParData_AllRank[PAR_MASS][p] = ParM;
 
-         int XOffset = p%10;
-         int YOffset = (p/10)%10;
-         int ZOffset = p/100;
+         RanPos    = RNG->GetValue( 0, 0.0, Radius );
+         RanVec_FixRadius( RanPos, RanVec );
 
-         ParData_AllRank[PAR_POSX][p] = ParData_AllRank[PAR_POSX][0] + XOffset*ParDist;
-         ParData_AllRank[PAR_POSY][p] = ParData_AllRank[PAR_POSY][0] + YOffset*ParDist;
-         ParData_AllRank[PAR_POSZ][p] = ParData_AllRank[PAR_POSZ][0] + ZOffset*ParDist;
+         for (int i=0; i<3; i++) ParData_AllRank[PAR_POSX+i][p] = RanVec[i] + BoxSize[i]/2;
 
          RanV    = RNG->GetValue( 0, RanVelL, RanVelH );
          RanVec_FixRadius( RanV, RanVec );
