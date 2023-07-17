@@ -335,7 +335,7 @@ void Par_Init_ByFunction( const long NPar_ThisRank, const long NPar_AllRank,
 
    const double BoxSize[3]   = { amr->BoxSize[0], amr->BoxSize[1], amr->BoxSize[2] };
    const real   ParDist      = BoxSize[0]/(2*9);                          // distance betwwen adjacent particles
-   const double Radius       = BoxSize[0]/(2*10)
+   const double Radius       = BoxSize[0]/(2*10);
 
    double RanPos, RanV, RanVec[3];
 
