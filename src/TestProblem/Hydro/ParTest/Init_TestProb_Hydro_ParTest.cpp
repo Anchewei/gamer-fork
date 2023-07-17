@@ -5,10 +5,13 @@
 
 // problem-specific global variables
 // =======================================================================================
-static bool   var_bool;
-static double var_double;
-static int    var_int;
-static char   var_str[MAX_STRING];
+static double ParM;
+static double BackDen;
+static double RanVelL;
+static double RanVelH;
+
+static RandomNumber_t *RNG = NULL;
+
 // =======================================================================================
 
 
