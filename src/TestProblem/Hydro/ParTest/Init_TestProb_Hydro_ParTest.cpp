@@ -154,7 +154,7 @@ void SetParameter()
 // ********************************************************************************************************************************
    ReadPara->Add( "ParM",           &ParM,               1.0,           Eps_double,       NoMax_double      );
    ReadPara->Add( "BackDen",        &BackDen,          1e-27,           Eps_double,       NoMax_double      );
-   ReadPara->Add( "RanVelL",        &RanVelL,            0.0,           Eps_double,       NoMax_double      );
+   ReadPara->Add( "RanVelL",        &RanVelL,            0.0,           0.0,              NoMax_double      );
    ReadPara->Add( "RanVelH",        &RanVelH,            1.0,           Eps_double,       NoMax_double      );
 
    ReadPara->Read( FileName );
