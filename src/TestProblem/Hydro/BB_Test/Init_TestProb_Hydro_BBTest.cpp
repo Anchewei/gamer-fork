@@ -245,13 +245,13 @@ void SetParameter()
 } // FUNCTION : SetParameter
 
 //-------------------------------------------------------------------------------------------------------
-// Function    :  Load_Turbulence
+// Function    :  Load_Turbulence_BB
 // Description : load turbulence and calculate Vrms_Scale
 // Note        :
 // Parameter   :
 // Return      :
 //-------------------------------------------------------------------------------------------------------
-void Load_Turbulence()
+void Load_Turbulence_BB()
 {
    const bool RowMajor_No  = false;           // load data into the column major
    const bool AllocMem_Yes = true;            // allocate memory for ISM_Velocity_Perturbation
@@ -284,7 +284,7 @@ void Load_Turbulence()
    Vrms = SQRT( (Total_VelX_SQR + Total_VelY_SQR + Total_VelZ_SQR) / Total_Vrms_Count - 
                 SQR( (Total_VelX + Total_VelY + Total_VelZ) / Total_Vrms_Count ) );
    Vrms_Scale = Mach_num * Cs / Vrms;
-} // Function : Load_Turbulence
+} // Function : Load_Turbulence_BB
 
 //-------------------------------------------------------------------------------------------------------
 // Function    :  SetGridIC
@@ -429,7 +429,7 @@ void Init_TestProb_Hydro_BBTest()
    SetParameter();
 
 // set the function pointers of various problem-specific routines
-   if ( OPT__INIT != INIT_BY_RESTART ) Load_Turbulence();
+   if ( OPT__INIT != INIT_BY_RESTART ) Load_Turbulence_BB();
    Init_Function_User_Ptr = SetGridIC;
 #  endif // #if ( MODEL == HYDRO )
 #  ifdef PARTICLE
