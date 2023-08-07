@@ -12,6 +12,8 @@ static double     Omega0;
 static double     Core_Mass;
 static double     Delta_Dens;
 static double     Dens_Contrast;
+static double     B0;
+static double     theta_B;
 double            rho_AD_BB;                      // adiabatic density thresheld
 // =======================================================================================
 
@@ -129,6 +131,8 @@ void SetParameter()
    ReadPara->Add( "Core_Mass",         &Core_Mass,             0.0,           0.0,              NoMax_double      );
    ReadPara->Add( "Delta_Dens",        &Delta_Dens,            0.0,           0.0,              NoMax_double      );
    ReadPara->Add( "Dens_Contrast",     &Dens_Contrast,         0.0,           0.0,              NoMax_double      );
+   ReadPara->Add( "B0"     ,           &B0,                    0.0,           0.0,              NoMax_double      );
+   ReadPara->Add( "theta_B",           &theta_B,               0.0,           0.0,              NoMax_double      );
    ReadPara->Add( "rho_AD_BB",         &rho_AD_BB,             0.0,           0.0,              NoMax_double      );
 
    ReadPara->Read( FileName );
@@ -144,6 +148,7 @@ void SetParameter()
    Rho0 = 3.0 * Core_Mass / (4.0 * M_PI * CUBE(R0));
    Omega0 /= 1/UNIT_T;
    rho_AD_BB /= UNIT_D;
+   theta_B = theta_B*M_PI/180; // degree to radian
 
 // (3) reset other general-purpose parameters
 //     --> a helper macro PRINT_WARNING is defined in TestProb.h
@@ -171,6 +176,8 @@ void SetParameter()
       Aux_Message( stdout, "  Rho0                  = %13.7e g/cm3\n",  Rho0*UNIT_D                          );
       Aux_Message( stdout, "  Omega0                = %13.7e /s\n",     Omega0*UNIT_T                        );
       Aux_Message( stdout, "  Core Mass             = %13.7e M_sun\n",  Core_Mass/Const_Msun                 );
+      Aux_Message( stdout, "  B field               = %13.7e G\n",      B0                                   );
+      Aux_Message( stdout, "  B angle               = %13.7e radian\n", theta_B                              );
       Aux_Message( stdout, "  rho_AD_BB             = %13.7e \n",       rho_AD_BB                            );
       Aux_Message( stdout, "=============================================================================\n" );
    }
@@ -239,6 +246,37 @@ void SetGridIC( real fluid[], const double x, const double y, const double z, co
    fluid[ENGY] = Etot;
 
 } // FUNCTION : SetGridIC
+
+#ifdef MHD
+//-------------------------------------------------------------------------------------------------------
+// Function    :  SetBFieldIC
+// Description :  Set the problem-specific initial condition of magnetic field
+//
+// Note        :  1. This function will be invoked by multiple OpenMP threads when OPENMP is enabled
+//                   (unless OPT__INIT_GRID_WITH_OMP is disabled)
+//                   --> Please ensure that everything here is thread-safe
+//
+// Parameter   :  magnetic : Array to store the output magnetic field
+//                x/y/z    : Target physical coordinates
+//                Time     : Target physical time
+//                lv       : Target refinement level
+//                AuxArray : Auxiliary array
+//
+// Return      :  magnetic
+//-------------------------------------------------------------------------------------------------------
+void SetBFieldIC( real magnetic[], const double x, const double y, const double z, const double Time,
+                  const int lv, double AuxArray[] )
+{
+   double MagX = 0.0, MagY = 0.0, MagZ = 0.0;
+   MagZ = B0*COS(theta_B)/UNIT_B;
+   MagY = B0*SIN(theta_B)/UNIT_B;
+
+   magnetic[MAGX] = MagX;
+   magnetic[MAGY] = MagY;
+   magnetic[MAGZ] = MagZ;
+
+} // FUNCTION : SetBFieldIC
+#endif // #ifdef MHD
 #endif // #if ( MODEL == HYDRO )
 
 #  ifdef PARTICLE
