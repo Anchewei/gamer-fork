@@ -5,6 +5,33 @@
 
 // problem-specific global variables
 // =======================================================================================
+static double     *tur_table = NULL;              // used to store turbulence (1D)
+static int        tur_table_NBin;                 // number of row in turbulence table obtained by Aux_LoadTable
+static int        tur_table_Ncol;                 // number of column in turbulence table (set by user)
+static int        *TargetCols = new int [6];    // Index of columns read from the turbulence table 
+static int        ColIdx_X;                    // Column index of x coordinate in the turbulence table
+static int        ColIdx_Y;                    // Column index of y coordinate in the turbulence table 
+static int        ColIdx_Z;                    // Column index of z coordinate in the turbulence table 
+static int        ColIdx_VelX;                 // Column index of x direction velocity in the turbulence table 
+static int        ColIdx_VelY;                 // Column index of y direction velocity in the turbulence table 
+static int        ColIdx_VelZ;                 // Column index of z direction velocity in the turbulence table 
+static double     *Table_X;                       // used to store the readed data
+static double     *Table_Y;
+static double     *Table_Z;
+static double     *Table_VelX;
+static double     *Table_VelY;
+static double     *Table_VelZ;
+static int        size;                           // turbulence cell number
+static double     Total_VelX;                     // used to calculate Vrms
+static double     Total_VelY;
+static double     Total_VelZ;
+static double     Total_VelX_SQR;
+static double     Total_VelY_SQR;
+static double     Total_VelZ_SQR;
+static double     Vrms;
+static double     Vrms_Scale;                     // used to rescale velocity
+static int        Total_Vrms_Count;
+
 static double     Cs;                             // sound spped
 static double     R0;
 static double     Rho0;
@@ -14,7 +41,9 @@ static double     Delta_Dens;
 static double     Dens_Contrast;
 static double     B0;
 static double     theta_B;
+static double     Mach_num;
 double            rho_AD_BB;                      // adiabatic density thresheld
+static char       Tur_Table[MAX_STRING];
 // =======================================================================================
 
 #ifdef FEEDBACK
@@ -133,11 +162,37 @@ void SetParameter()
    ReadPara->Add( "Dens_Contrast",     &Dens_Contrast,         0.0,           0.0,              NoMax_double      );
    ReadPara->Add( "B0"     ,           &B0,                    0.0,           0.0,              NoMax_double      );
    ReadPara->Add( "theta_B",           &theta_B,               0.0,           0.0,              NoMax_double      );
+   ReadPara->Add( "Mach_num",          &Mach_num,              0.0,           0.0,              NoMax_double      );
    ReadPara->Add( "rho_AD_BB",         &rho_AD_BB,             0.0,           0.0,              NoMax_double      );
+   ReadPara->Add( "Tur_Table",         Tur_Table,              NoDef_str,     Useless_str,      Useless_str       );
 
    ReadPara->Read( FileName );
 
    delete ReadPara;
+
+   tur_table_Ncol = 6;
+   TargetCols[0] =  0;
+   TargetCols[1] =  1;
+   TargetCols[2] =  2;
+   TargetCols[3] =  3;
+   TargetCols[4] =  4;
+   TargetCols[5] =  5;
+   ColIdx_X      =  0;
+   ColIdx_Y      =  1;
+   ColIdx_Z      =  2;
+   ColIdx_VelX   =  3;
+   ColIdx_VelY   =  4;
+   ColIdx_VelZ   =  5;
+   Total_VelX = 0.0;
+   Total_VelY = 0.0;
+   Total_VelZ = 0.0;
+   Total_VelX_SQR = 0.0;
+   Total_VelY_SQR = 0.0;
+   Total_VelZ_SQR = 0.0;
+   Vrms = 0.0;
+   Vrms_Scale = 0.0;
+   Total_Vrms_Count = 0;
+   size = 129;
 
 
 // (2) set the problem-specific derived parameters
@@ -178,6 +233,8 @@ void SetParameter()
       Aux_Message( stdout, "  Core Mass             = %13.7e M_sun\n",  Core_Mass/Const_Msun                 );
       Aux_Message( stdout, "  B field               = %13.7e G\n",      B0                                   );
       Aux_Message( stdout, "  B angle               = %13.7e radian\n", theta_B                              );
+      Aux_Message( stdout, "  Mach number           = %13.7e \n",       Mach_num                             );
+      Aux_Message( stdout, "  Turbulence table      = %s\n",            Tur_Table                            );
       Aux_Message( stdout, "  rho_AD_BB             = %13.7e \n",       rho_AD_BB                            );
       Aux_Message( stdout, "=============================================================================\n" );
    }
@@ -186,6 +243,48 @@ void SetParameter()
    if ( MPI_Rank == 0 )    Aux_Message( stdout, "   Setting runtime parameters ... done\n" );
 
 } // FUNCTION : SetParameter
+
+//-------------------------------------------------------------------------------------------------------
+// Function    :  Load_Turbulence
+// Description : load turbulence and calculate Vrms_Scale
+// Note        :
+// Parameter   :
+// Return      :
+//-------------------------------------------------------------------------------------------------------
+void Load_Turbulence()
+{
+   const bool RowMajor_No  = false;           // load data into the column major
+   const bool AllocMem_Yes = true;            // allocate memory for ISM_Velocity_Perturbation
+   const double BoxSize[3]   = { amr->BoxSize[0], amr->BoxSize[1], amr->BoxSize[2] };
+   const double BoxCenter[3] = { amr->BoxCenter[0], amr->BoxCenter[1], amr->BoxCenter[2] };
+
+   tur_table_NBin = Aux_LoadTable( tur_table, Tur_Table, tur_table_Ncol, TargetCols, RowMajor_No, AllocMem_Yes );
+
+   Table_X     = tur_table + ColIdx_X * tur_table_NBin;
+   Table_Y     = tur_table + ColIdx_Y * tur_table_NBin;
+   Table_Z     = tur_table + ColIdx_Z * tur_table_NBin;
+   Table_VelX  = tur_table + ColIdx_VelX * tur_table_NBin;
+   Table_VelY  = tur_table + ColIdx_VelY * tur_table_NBin;
+   Table_VelZ  = tur_table + ColIdx_VelZ * tur_table_NBin;
+
+   for ( int i = 0; i < tur_table_NBin; i++ )
+   {
+      Total_VelX += Table_VelX[i];
+      Total_VelY += Table_VelY[i];
+      Total_VelZ += Table_VelZ[i];
+
+      Total_VelX_SQR += SQR(Table_VelX[i]);
+      Total_VelY_SQR += SQR(Table_VelY[i]);
+      Total_VelZ_SQR += SQR(Table_VelZ[i]);
+
+      Total_Vrms_Count ++;
+   }
+
+   // Vrms = SQRT( ( Vx^2 + Vy^2 + Vz^2 ) / N + ( Vx + Vy + Vz / N) ^ 2 )
+   Vrms = SQRT( (Total_VelX_SQR + Total_VelY_SQR + Total_VelZ_SQR) / Total_Vrms_Count - 
+                SQR( (Total_VelX + Total_VelY + Total_VelZ) / Total_Vrms_Count ) );
+   Vrms_Scale = Mach_num * Cs / Vrms;
+} // Function : Load_Turbulence
 
 //-------------------------------------------------------------------------------------------------------
 // Function    :  SetGridIC
@@ -217,6 +316,19 @@ void SetGridIC( real fluid[], const double x, const double y, const double z, co
 
    double Dens, MomX, MomY, MomZ, Pres, Eint, Etot;
    double VelX, VelY, VelZ;
+
+   int i = (int) ( ( x / BoxSize[0] ) * size );    // turbulence box index (cude)
+   int j = (int) ( ( y / BoxSize[0] ) * size );
+   int k = (int) ( ( z / BoxSize[0] ) * size );
+   int index = i * SQR(size) + j * size + k;
+   if ( i < 0 || i > size   ) Aux_Error( ERROR_INFO, "index is out of bound\n,  i = %d", i  );
+   if ( j < 0 || j > size   ) Aux_Error( ERROR_INFO, "index is out of bound\n,  j = %d", j  );
+   if ( k < 0 || k > size   ) Aux_Error( ERROR_INFO, "index is out of bound\n,  k = %d", k );
+   if ( index < 0 || index > tur_table_NBin ) Aux_Error( ERROR_INFO, "index is out of bound\n, index = %d", index );
+
+   VelX = Vrms_Scale * ( Table_VelX[ index ] - Total_VelX / Total_Vrms_Count );
+   VelY = Vrms_Scale * ( Table_VelY[ index ] - Total_VelY / Total_Vrms_Count );
+   VelZ = Vrms_Scale * ( Table_VelZ[ index ] - Total_VelZ / Total_Vrms_Count );
 
    if ( Rs < R0 )
    {
@@ -316,6 +428,7 @@ void Init_TestProb_Hydro_BBTest()
    SetParameter();
 
 // set the function pointers of various problem-specific routines
+   if ( OPT__INIT != INIT_BY_RESTART ) Load_Turbulence();
    Init_Function_User_Ptr = SetGridIC;
 #  endif // #if ( MODEL == HYDRO )
 #  ifdef PARTICLE
