@@ -432,6 +432,9 @@ void Init_TestProb_Hydro_BBTest()
    if ( OPT__INIT != INIT_BY_RESTART ) Load_Turbulence_BB();
    Init_Function_User_Ptr = SetGridIC;
 #  endif // #if ( MODEL == HYDRO )
+#  ifdef MHD
+   Init_Function_BField_User_Ptr     = SetBFieldIC;
+#  endif
 #  ifdef PARTICLE
    Par_Init_ByFunction_Ptr           = Par_Init_ByFunction_BBTest; // option: PAR_INIT=1;              example: Particle/Par_Init_ByFunction.cpp
    Par_Init_Attribute_User_Ptr       = NULL; // set PAR_NATT_USER;               example: TestProblem/Hydro/AGORA_IsolatedGalaxy/Init_TestProb_Hydro_AGORA_IsolatedGalaxy.cpp --> AddNewParticleAttribute()
