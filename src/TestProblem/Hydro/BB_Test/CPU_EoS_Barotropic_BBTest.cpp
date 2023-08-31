@@ -115,7 +115,7 @@ static real EoS_DensEint2Pres_Barotropic_BBTest( const real Dens, const real Ein
 
    Hydro_CheckUnphysical( UNPHY_MODE_SING, &Dens, "input density",         ERROR_INFO, UNPHY_VERBOSE );
 // note that some EoS may support Eint<0
-   Hydro_CheckUnphysical( UNPHY_MODE_SING, &Eint, "input internal energy", ERROR_INFO, UNPHY_VERBOSE );
+   // Hydro_CheckUnphysical( UNPHY_MODE_SING, &Eint, "input internal energy", ERROR_INFO, UNPHY_VERBOSE );
 #  endif // GAMER_DEBUG
 
 
