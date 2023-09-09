@@ -78,13 +78,13 @@ void Validate()
    Aux_Error( ERROR_INFO, "GRAVITY must be enabled !!\n" );
 #  endif
 
-#  ifndef STAR_FORMATION
-   Aux_Error( ERROR_INFO, "STAR_FORMATION must be enabled !!\n" );
-#  endif
+// #  ifndef STAR_FORMATION
+//    Aux_Error( ERROR_INFO, "STAR_FORMATION must be enabled !!\n" );
+// #  endif
 
-#  ifndef FEEDBACK
-   Aux_Error( ERROR_INFO, "FEEDBACK must be enabled !!\n" );
-#  endif
+// #  ifndef FEEDBACK
+//    Aux_Error( ERROR_INFO, "FEEDBACK must be enabled !!\n" );
+// #  endif
 
 #  ifdef PARTICLE
    if ( OPT__INIT == INIT_BY_FUNCTION  &&  amr->Par->Init != PAR_INIT_BY_FUNCTION )
