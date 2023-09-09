@@ -606,9 +606,9 @@ void SF_CreateStar_AGORA( const int lv, const real TimeNew, const real dt, Rando
       } // pi, pj, pk
    } // for (int PID0=0; PID0<amr->NPatchComma[lv][1]; PID0+=8) #  pragma omp for schedule( static )
 
-   delete [] Flu_Array_F_In;  Flu_Array_F_In = NULL;
-   delete [] Mag_Array_F_In;  Mag_Array_F_In = NULL;
-   delete [] Pot_Array_USG_F; Pot_Array_USG_F = NULL;
+   delete [] Flu_Array_F_In;
+   delete [] Mag_Array_F_In;
+   delete [] Pot_Array_USG_F;
    } // end of OpenMP parallel region
 
 // Excluding the nearby particles + remove the gas from the cell
@@ -672,10 +672,10 @@ void SF_CreateStar_AGORA( const int lv, const real TimeNew, const real dt, Rando
       }
    } // for (int pi=0; pi<NNewPar; pi++)
 
-   delete [] GatherNNewPar;      GatherNNewPar = NULL;
-   delete [] RecvRemovalFluSize; RecvRemovalFluSize = NULL;
-   delete [] disp;               disp = NULL;
-   delete [] GatherRemovalFlu;   GatherRemovalFlu = NULL;
+   delete [] GatherNNewPar;
+   delete [] RecvRemovalFluSize;
+   delete [] disp;
+   delete [] GatherRemovalFlu;
 
 // Add the selected particles
 // ===========================================================================================================
@@ -730,17 +730,17 @@ void SF_CreateStar_AGORA( const int lv, const real TimeNew, const real dt, Rando
       amr->patch[0][lv][SPID]->AddParticle( ParInPatch, ParIDInPatch, &amr->Par->NPar_Lv[lv], PType );
 #    endif
 
-      delete [] ParIDInPatch; ParIDInPatch = NULL;
+      delete [] ParIDInPatch;
    } // for (int i=0; i<UniqueCount; i++)
    
-   delete [] SelNewParPID; SelNewParPID = NULL;
-   delete [] UniqueParPID; UniqueParPID = NULL;
+   delete [] SelNewParPID;
+   delete [] UniqueParPID;
 
-   delete [] RemovalPos; RemovalPos = NULL;
-   delete [] RemovalFlu; RemovalFlu = NULL;
-   delete [] NewParAtt;  NewParAtt = NULL;
-   delete [] NewParID;   NewParID = NULL;
-   delete [] NewParPID;  NewParPID = NULL;
+   delete [] RemovalPos;
+   delete [] RemovalFlu;
+   delete [] NewParAtt;
+   delete [] NewParID;
+   delete [] NewParPID;
 
 // free memory
    Par_CollectParticle2OneLevel_FreeMemory( lv, SibBufPatch_Yes, FaSibBufPatch_No );
