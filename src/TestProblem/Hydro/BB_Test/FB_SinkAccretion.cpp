@@ -301,7 +301,7 @@ int FB_SinkAccretion( const int lv, const double TimeNew, const double TimeOld, 
       ParAtt[PAR_MASS][p] +=  DeltaMTot;
    } // for (int t=0; t<NPar; t++)
 
-   delete [] RemovalIdx;
+   delete [] RemovalIdx; RemovalIdx = NULL;
 
    return GAMER_SUCCESS;
 
