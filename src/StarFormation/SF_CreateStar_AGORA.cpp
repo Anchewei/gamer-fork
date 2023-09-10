@@ -388,10 +388,10 @@ void SF_CreateStar_AGORA( const int lv, const real TimeNew, const real dt, Rando
             if ( NotPassDen )                break;
          } // for (int t=0; t<NNearbyPatch; t++)
 
+         for (int v=0; v<PAR_NATT_TOTAL; v++)   delete [] ParAtt_Local[v];
+
          if ( InsideAccRadius )               continue;
          if ( NotPassDen )                    continue;
-
-         for (int v=0; v<PAR_NATT_TOTAL; v++)   delete [] ParAtt_Local[v];
 
 //       Gravatational minimum check inside the control volume
 //       ===========================================================================================================
