@@ -388,11 +388,7 @@ void SF_CreateStar_AGORA( const int lv, const real TimeNew, const real dt, Rando
             if ( NotPassDen )                break;
          } // for (int t=0; t<NNearbyPatch; t++)
 
-         if ( NParMax > 0 )
-         {
-            for (int v=0; v<PAR_NATT_TOTAL; v++)
-               if ( ParAttBitIdx_In & BIDX(v) )    delete [] ParAtt_Local[v];
-         }
+         for (int v=0; v<PAR_NATT_TOTAL; v++)      delete [] ParAtt_Local[v]; ParAtt_Local[v] = NULL;
 
          if ( InsideAccRadius )               continue;
          if ( NotPassDen )                    continue;
