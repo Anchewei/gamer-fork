@@ -718,8 +718,11 @@ void SF_CreateStar_AGORA( const int lv, const real TimeNew, const real dt, Rando
          } // if (SelNewParPID[p] == SPID) 
       } // for (int p=0; p<SelNNewPar; p++)
 
-      if ( ParInPatch == 0 )                        continue;
-
+      if ( ParInPatch == 0 )          
+      {
+         delete [] ParIDInPatch;
+         continue;
+      }              
 
 #     ifdef DEBUG_PARTICLE
 //    do not set ParPos too early since pointers to the particle repository (e.g., amr->Par->PosX)
