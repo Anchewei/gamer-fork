@@ -147,7 +147,6 @@ void SF_CreateStar_AGORA( const int lv, const real TimeNew, const real dt, Rando
    real   (*Flu_Array_F_In)[CUBE(Size_Flu)]                = new real [FLU_NIN][CUBE(Size_Flu)];
    real   (*Mag_Array_F_In)[Size_Flu_P1*SQR(Size_Flu)]     = new real [NCOMP_MAG][Size_Flu_P1*SQR(Size_Flu)];
    real   (*Pot_Array_USG_F)                               = new real [CUBE(Size_Pot)];
-   real   (*ParAtt_Local)[MaxNewPar]                       = new real [PAR_NATT_TOTAL][MaxNewPar];
 
    int LocalID, delta_t, PGi, PGj, PGk;
 
@@ -266,25 +265,25 @@ void SF_CreateStar_AGORA( const int lv, const real TimeNew, const real dt, Rando
          bool InsideAccRadius = false;
          bool NotPassDen      = false;
 
-         // real  *ParAtt_Local[PAR_NATT_TOTAL];
-         // int    NParMax   = -1;
+         real  *ParAtt_Local[PAR_NATT_TOTAL];
+         int    NParMax   = -1;
 
-         // for (int v=0; v<PAR_NATT_TOTAL; v++)   ParAtt_Local[v] = NULL;
+         for (int v=0; v<PAR_NATT_TOTAL; v++)   ParAtt_Local[v] = NULL;
 
-         // for (int t=0; t<NNearbyPatch; t++)
-         // {
-         //    const int PPID = Nearby_PID_List[t]; // check the particle number for this patch (PPID)
+         for (int t=0; t<NNearbyPatch; t++)
+         {
+            const int PPID = Nearby_PID_List[t]; // check the particle number for this patch (PPID)
 
-         // // check both NPar and NPar_Copy (NPar_Copy may be -1, which is fine)
-         //    NParMax = MAX( NParMax, amr->patch[0][lv][PPID]->NPar      );
-         //    NParMax = MAX( NParMax, amr->patch[0][lv][PPID]->NPar_Copy );
-         // }
+         // check both NPar and NPar_Copy (NPar_Copy may be -1, which is fine)
+            NParMax = MAX( NParMax, amr->patch[0][lv][PPID]->NPar      );
+            NParMax = MAX( NParMax, amr->patch[0][lv][PPID]->NPar_Copy );
+         }
 
-         // if ( NParMax > 0 )
-         // {
-         //    for (int v=0; v<PAR_NATT_TOTAL; v++)
-         //       if ( ParAttBitIdx_In & BIDX(v) )    ParAtt_Local[v] = new real [NParMax];
-         // }
+         if ( NParMax > 0 )
+         {
+            for (int v=0; v<PAR_NATT_TOTAL; v++)
+               if ( ParAttBitIdx_In & BIDX(v) )    ParAtt_Local[v] = new real [NParMax];
+         }
 
          // iterate over all nearby patches of the target patch group
          for (int t=0; t<NNearbyPatch; t++)
@@ -389,10 +388,10 @@ void SF_CreateStar_AGORA( const int lv, const real TimeNew, const real dt, Rando
             if ( NotPassDen )                break;
          } // for (int t=0; t<NNearbyPatch; t++)
 
-         // for (int v=0; v<PAR_NATT_TOTAL; v++)      
-         // {
-         //    delete [] ParAtt_Local[v]; ParAtt_Local[v] = NULL;
-         // }
+         for (int v=0; v<PAR_NATT_TOTAL; v++)      
+         {
+            delete [] ParAtt_Local[v]; ParAtt_Local[v] = NULL;
+         }
 
          if ( InsideAccRadius )               continue;
          if ( NotPassDen )                    continue;
@@ -613,7 +612,6 @@ void SF_CreateStar_AGORA( const int lv, const real TimeNew, const real dt, Rando
    delete [] Flu_Array_F_In;
    delete [] Mag_Array_F_In;
    delete [] Pot_Array_USG_F;
-   delete [] ParAtt_Local;
    } // end of OpenMP parallel region
 
 // Excluding the nearby particles + remove the gas from the cell
