@@ -621,7 +621,7 @@ void SF_CreateStar_AGORA( const int lv, const real TimeNew, const real dt, Rando
 // ===========================================================================================================
    MPI_Barrier(MPI_COMM_WORLD);
 
-   int      *GatherNNewPar         = new int [MPI_NRank];
+   int      *GatherNNewPar         = new int [MPI_NRank]; // the number of candidates for each rank
    MPI_Allgather(&NNewPar, 1, MPI_INT, GatherNNewPar, 1, MPI_INT, MPI_COMM_WORLD);
 
    int       TotalNNewPar          = 0; // get the total number of the candidates
@@ -629,15 +629,15 @@ void SF_CreateStar_AGORA( const int lv, const real TimeNew, const real dt, Rando
    for (int rank=0; rank<MPI_NRank; rank++) 
    {
       TotalNNewPar += GatherNNewPar[rank];
-      RecvRemovalFluSize[rank] = 5*GatherNNewPar[rank]; // receive count for each MPI rank
+      RecvRemovalFluSize[rank] = 5*GatherNNewPar[rank]; // receive "count" for each MPI rank
    }
 
    int      *disp                  = new int [MPI_NRank];
    disp[0] = 0;
    for (int rank=1; rank<MPI_NRank; rank++) disp[rank] = disp[rank-1] + RecvRemovalFluSize[rank-1];
 
-   int      SendRemovalFluSize     = NNewPar*5; // send count for the current MPI rank
-   real    (*GatherRemovalFlu)[5]  = new real [TotalNNewPar][5]; // the array containing all the candidates
+   int      SendRemovalFluSize     = NNewPar*5; // send "count" for the current MPI rank
+   real    (*GatherRemovalFlu)[5]  = new real [TotalNNewPar][5]; // the array containing all the candidates + their information
 
    MPI_Allgatherv(RemovalFlu[0], SendRemovalFluSize, MPI_GAMER_REAL, 
                   GatherRemovalFlu[0], RecvRemovalFluSize, disp, MPI_GAMER_REAL, MPI_COMM_WORLD);
@@ -703,7 +703,7 @@ void SF_CreateStar_AGORA( const int lv, const real TimeNew, const real dt, Rando
    } // for (int i=0; i<SelNNewPar; i++)
 
    const real *PType = amr->Par->Type;
-   int ParInPatch;
+   int ParInPatch; // particle number in this patch
 
    for (int i=0; i<UniqueCount; i++)
    {
