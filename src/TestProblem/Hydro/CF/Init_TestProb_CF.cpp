@@ -34,6 +34,7 @@ static int        Total_Vrms_Count;
 
 static double     Cs;                             // sound spped
 double            rho_AD;                         // adiabatic density thresheld
+int               PAR_ID = Idx_Undefined;         // particle id
 
 static double     CF_n0;
 static double     CF_vflow;
@@ -41,7 +42,6 @@ static double     CF_Mach;
 static double     CF_B;
 static double     CF_theta_B;
 static char       CF_Tur_Table[MAX_STRING];
-static int        PAR_ID = Idx_Undefined;
 // =======================================================================================
 
 #ifdef FEEDBACK
