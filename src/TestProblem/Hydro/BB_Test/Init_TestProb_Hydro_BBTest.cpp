@@ -235,7 +235,7 @@ void SetParameter()
       Aux_Message( stdout, "  B angle               = %13.7e radian\n", theta_B                              );
       Aux_Message( stdout, "  Mach number           = %13.7e \n",       Mach_num                             );
       Aux_Message( stdout, "  Turbulence table      = %s\n",            Tur_Table                            );
-      Aux_Message( stdout, "  rho_AD_BB             = %13.7e \n",       rho_AD_BB                            );
+      Aux_Message( stdout, "  rho_AD_BB             = %13.7e g/cm3\n",  rho_AD_BB                            );
       Aux_Message( stdout, "=============================================================================\n" );
    }
 
