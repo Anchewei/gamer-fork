@@ -1,5 +1,5 @@
 # problem-specific runtime parameters
-# The following parameters follow Hubber et al.
+# The following parameters follow Hubber et al. 2018
 R0                           3.0856776e+16  # [cm]
 Omega0                       1.6e-12        # [s^-1]
 Core_Mass                    1.0            # [M_sun]
