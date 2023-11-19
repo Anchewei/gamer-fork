@@ -560,6 +560,7 @@ void SF_CreateStar_AGORA( const int lv, const real TimeNew, const real dt, Rando
             NewParAtt[NNewPar][PAR_VELZ] = VelZ;
             NewParAtt[NNewPar][PAR_TIME] = TimeNew;
             NewParAtt[NNewPar][PAR_TYPE] = PTYPE_STAR;
+            NewParAtt[NNewPar][PAR_ID]   = 0; // initialize the value to be 0
 
    //       particle acceleration
    #        ifdef STORE_PAR_ACC
@@ -643,6 +644,7 @@ void SF_CreateStar_AGORA( const int lv, const real TimeNew, const real dt, Rando
                   GatherRemovalFlu[0], RecvRemovalFluSize, disp, MPI_GAMER_REAL, MPI_COMM_WORLD);
 
    long     *SelNewParPID          = new long [TotalNNewPar]; // PID of the selected paritcles
+   long     *SelNewParID           = new long [TotalNNewPar]; // ID (in the current rank) of the selected paritcles
    real dxpp, dypp, dzpp, D2C;   // calculate the distance between the two cells
    int SelNNewPar = 0; // the number of selected particles after the following check
    for (int pi=0; pi<NNewPar; pi++)
@@ -671,8 +673,8 @@ void SF_CreateStar_AGORA( const int lv, const real TimeNew, const real dt, Rando
          amr->patch[FluSg][lv][RemovalPos[pi][0]]->fluid[v][RemovalPos[pi][1]][RemovalPos[pi][2]][RemovalPos[pi][3]] *= RemovalFlu[pi][0];
 
       // add particles to the particle repository
-         NewParID[SelNNewPar] = amr->Par->AddOneParticle( NewParAtt[pi] );
-         
+         // NewParID[SelNNewPar] = amr->Par->AddOneParticle( NewParAtt[pi] );
+         SelNewParID[SelNNewPar]  = pi;
          SelNewParPID[SelNNewPar] = NewParPID[pi];
          SelNNewPar++;
       }
@@ -682,6 +684,29 @@ void SF_CreateStar_AGORA( const int lv, const real TimeNew, const real dt, Rando
    delete [] RecvRemovalFluSize;
    delete [] disp;
    delete [] GatherRemovalFlu;
+
+// Give the selected particles ID
+// ===========================================================================================================
+   MPI_Barrier(MPI_COMM_WORLD); 
+
+   long    NParAllRank         = amr->Par->NPar_Active_AllRank;; // Total number of active particles summed up over all MPI ranks
+   int    *GatherNSelPar       = new int [MPI_NRank]; // the number of selected particles that pass the above check for each rank
+   MPI_Allgather(&SelNNewPar, 1, MPI_INT, GatherNSelPar, 1, MPI_INT, MPI_COMM_WORLD);
+
+   int NParPreRank = 0; // the totol number of selected particle before MPI_Rank (this rank)
+   for (int r=0; r<MPI_Rank; r++)     NParPreRank += GatherNSelPar[r];
+
+   for (int p=0; i<SelNNewPar; i++)
+   {
+      int pi = SelNewParID[p];
+      NewParAtt[pi][PAR_ID] = NParAllRank + NParPreRank + p; // assign the ID
+
+      // add particles to the particle repository
+      NewParID[p] = amr->Par->AddOneParticle( NewParAtt[pi] );
+   }
+
+   delete [] SelNewParID;
+   delete [] GatherNSelPar;
 
 // Add the selected particles
 // ===========================================================================================================
