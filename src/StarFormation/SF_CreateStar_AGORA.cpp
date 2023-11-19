@@ -696,7 +696,7 @@ void SF_CreateStar_AGORA( const int lv, const real TimeNew, const real dt, Rando
    int NParPreRank = 0; // the totol number of selected particle before MPI_Rank (this rank)
    for (int r=0; r<MPI_Rank; r++)     NParPreRank += GatherNSelPar[r];
 
-   for (int p=0; i<SelNNewPar; i++)
+   for (int p=0; p<SelNNewPar; p++)
    {
       int pi = SelNewParID[p];
       NewParAtt[pi][PAR_ID] = NParAllRank + NParPreRank + p; // assign the ID
