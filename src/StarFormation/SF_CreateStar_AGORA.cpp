@@ -2,7 +2,7 @@
 
 #if ( defined PARTICLE  &&  defined STAR_FORMATION  &&  MODEL == HYDRO )
 
-
+extern double PAR_ID;
 
 //-------------------------------------------------------------------------------------------------------
 // Function    :  FindLocalPID
