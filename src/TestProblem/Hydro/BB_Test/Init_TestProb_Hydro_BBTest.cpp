@@ -44,7 +44,7 @@ static double     theta_B;
 static double     Mach_num;
 double            rho_AD_BB;                      // adiabatic density thresheld
 static char       Tur_Table[MAX_STRING];
-int               PAR_ID = Idx_Undefined;         // particle id
+static int        PAR_ID = Idx_Undefined;         // particle id/ particle id
 // =======================================================================================
 
 #ifdef FEEDBACK
