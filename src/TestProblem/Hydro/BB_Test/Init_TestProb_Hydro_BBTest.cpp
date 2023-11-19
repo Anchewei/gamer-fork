@@ -44,6 +44,7 @@ static double     theta_B;
 static double     Mach_num;
 double            rho_AD_BB;                      // adiabatic density thresheld
 static char       Tur_Table[MAX_STRING];
+int               PAR_ID = Idx_Undefined;         // particle id
 // =======================================================================================
 
 #ifdef FEEDBACK
@@ -393,6 +394,30 @@ void SetBFieldIC( real magnetic[], const double x, const double y, const double 
 #endif // #if ( MODEL == HYDRO )
 
 #  ifdef PARTICLE
+//-------------------------------------------------------------------------------------------------------
+// Function    :  AddNewParticleAttribute_CF
+// Description :  Add the problem-specific particle attributes
+//
+// Note        :  1. Ref: https://github.com/gamer-project/gamer/wiki/Adding-New-Simulations#v-add-problem-specific-grid-fields-and-particle-attributes
+//                2. Invoke AddParticleField() for each of the problem-specific particle attribute:
+//                   --> Attribute label sent to AddParticleField() will be used as the output name of the attribute
+//                   --> Attribute index returned by AddParticleField() can be used to access the particle attribute data
+//                3. Pre-declared attribute indices are put in Field.h
+//
+// Parameter   :  None
+//
+// Return      :  None
+//-------------------------------------------------------------------------------------------------------
+void AddNewParticleAttribute_BBTest()
+{
+
+// "Idx_ParMetalFrac" has been predefined in Field.h
+   if ( PAR_ID == Idx_Undefined )
+      PAR_ID = AddParticleAttribute( "PAR_ID" );
+
+} // FUNCTION : AddNewParticleAttribute_BBTest
+
+
 void Par_Init_ByFunction_BBTest( const long NPar_ThisRank, const long NPar_AllRank,
                           real *ParMass, real *ParPosX, real *ParPosY, real *ParPosZ,
                           real *ParVelX, real *ParVelY, real *ParVelZ, real *ParTime,
@@ -437,7 +462,7 @@ void Init_TestProb_Hydro_BBTest()
 #  endif
 #  ifdef PARTICLE
    Par_Init_ByFunction_Ptr           = Par_Init_ByFunction_BBTest; // option: PAR_INIT=1;              example: Particle/Par_Init_ByFunction.cpp
-   Par_Init_Attribute_User_Ptr       = NULL; // set PAR_NATT_USER;               example: TestProblem/Hydro/AGORA_IsolatedGalaxy/Init_TestProb_Hydro_AGORA_IsolatedGalaxy.cpp --> AddNewParticleAttribute()
+   Par_Init_Attribute_User_Ptr       = AddNewParticleAttribute_BBTest; // set PAR_NATT_USER;               example: TestProblem/Hydro/AGORA_IsolatedGalaxy/Init_TestProb_Hydro_AGORA_IsolatedGalaxy.cpp --> AddNewParticleAttribute()
 #  endif
 #  ifdef FEEDBACK
    FB_Init_User_Ptr                  = FB_Init_SinkAccretion;
