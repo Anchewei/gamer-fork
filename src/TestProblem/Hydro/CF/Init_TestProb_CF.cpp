@@ -34,7 +34,8 @@ static int        Total_Vrms_Count;
 
 static double     Cs;                             // sound spped
 double            rho_AD;                         // adiabatic density thresheld
-static int        PAR_ID = Idx_Undefined;         // particle id
+// static int        PAR_ID = Idx_Undefined;         // particle id
+SET_GLOBAL( FieldIdx_t PAR_ID,  Idx_Undefined );
 
 static double     CF_n0;
 static double     CF_vflow;
