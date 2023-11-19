@@ -560,7 +560,7 @@ void SF_CreateStar_AGORA( const int lv, const real TimeNew, const real dt, Rando
             NewParAtt[NNewPar][PAR_VELZ] = VelZ;
             NewParAtt[NNewPar][PAR_TIME] = TimeNew;
             NewParAtt[NNewPar][PAR_TYPE] = PTYPE_STAR;
-            NewParAtt[NNewPar][PAR_ID]   = 0; // initialize the value to be 0
+            NewParAtt[NNewPar][PAR_ID]   = -1; // initialize the value to be -1
 
    //       particle acceleration
    #        ifdef STORE_PAR_ACC
