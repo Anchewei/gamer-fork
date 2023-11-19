@@ -44,8 +44,6 @@ static double     theta_B;
 static double     Mach_num;
 double            rho_AD_BB;                      // adiabatic density thresheld
 static char       Tur_Table[MAX_STRING];
-// static int        PAR_ID = Idx_Undefined;         // particle id/ particle id
-SET_GLOBAL( FieldIdx_t PAR_ID,  Idx_Undefined );
 // =======================================================================================
 
 #ifdef FEEDBACK
@@ -413,8 +411,8 @@ void AddNewParticleAttribute_BBTest()
 {
 
 // "Idx_ParMetalFrac" has been predefined in Field.h
-   if ( PAR_ID == Idx_Undefined )
-      PAR_ID = AddParticleAttribute( "PAR_ID" );
+   if ( Idx_ParID == Idx_Undefined )
+      Idx_ParID = AddParticleAttribute( "PAR_ID" );
 
 } // FUNCTION : AddNewParticleAttribute_BBTest
 

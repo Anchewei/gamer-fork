@@ -34,8 +34,6 @@ static int        Total_Vrms_Count;
 
 static double     Cs;                             // sound spped
 double            rho_AD;                         // adiabatic density thresheld
-// static int        PAR_ID = Idx_Undefined;         // particle id
-SET_GLOBAL( FieldIdx_t PAR_ID,  Idx_Undefined );
 
 static double     CF_n0;
 static double     CF_vflow;
@@ -366,8 +364,8 @@ void AddNewParticleAttribute_CF()
 {
 
 // "Idx_ParMetalFrac" has been predefined in Field.h
-   if ( PAR_ID == Idx_Undefined )
-      PAR_ID = AddParticleAttribute( "PAR_ID" );
+   if ( Idx_ParID == Idx_Undefined )
+      Idx_ParID = AddParticleAttribute( "PAR_ID" );
 
 } // FUNCTION : AddNewParticleAttribute_CF
 
