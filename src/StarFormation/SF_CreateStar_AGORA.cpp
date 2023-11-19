@@ -558,7 +558,7 @@ void SF_CreateStar_AGORA( const int lv, const real TimeNew, const real dt, Rando
             NewParAtt[NNewPar][PAR_VELZ] = VelZ;
             NewParAtt[NNewPar][PAR_TIME] = TimeNew;
             NewParAtt[NNewPar][PAR_TYPE] = PTYPE_STAR;
-            NewParAtt[NNewPar][PAR_ID]   = -1; // initialize the value to be -1
+            NewParAtt[NNewPar][Idx_ParID]   = -1; // initialize the value to be -1
 
    //       particle acceleration
    #        ifdef STORE_PAR_ACC
@@ -697,7 +697,7 @@ void SF_CreateStar_AGORA( const int lv, const real TimeNew, const real dt, Rando
    for (int p=0; p<SelNNewPar; p++)
    {
       int pi = SelNewParID[p];
-      NewParAtt[pi][PAR_ID] = NParAllRank + NParPreRank + p; // assign the ID
+      NewParAtt[pi][Idx_ParID] = NParAllRank + NParPreRank + p; // assign the ID
 
       // add particles to the particle repository
       NewParID[p] = amr->Par->AddOneParticle( NewParAtt[pi] );
