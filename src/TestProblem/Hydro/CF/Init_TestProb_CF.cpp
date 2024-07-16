@@ -360,6 +360,7 @@ void SetBFieldIC( real magnetic[], const double x, const double y, const double 
 //
 // Return      :  None
 //-------------------------------------------------------------------------------------------------------
+#  ifdef PARTICLE
 void AddNewParticleAttribute_CF()
 {
 
@@ -368,6 +369,7 @@ void AddNewParticleAttribute_CF()
       Idx_ParID = AddParticleAttribute( "PAR_ID" );
 
 } // FUNCTION : AddNewParticleAttribute_CF
+#  endif
 
 
 //-------------------------------------------------------------------------------------------------------

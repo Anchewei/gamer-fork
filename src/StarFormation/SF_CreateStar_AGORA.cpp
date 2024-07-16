@@ -397,7 +397,7 @@ void SF_CreateStar_AGORA( const int lv, const real TimeNew, const real dt, Rando
          if ( InsideAccRadius )               continue;
          if ( NotPassDen )                    continue;
 
-//       Gravatational minimum check inside the control volume
+//       Gravitational minimum check inside the control volume
 //       ===========================================================================================================
          real phi000 = Pot_Array_USG_F[t]; // the potential of the current cell
          real phiijk = (real)0.0;
