@@ -4,7 +4,7 @@
 
 // function pointers to be set by FB_Init_Plummer()
 extern int (*FB_User_Ptr)( const int lv, const double TimeNew, const double TimeOld, const double dt,
-                           const int NPar, const int *ParSortID, real *ParAtt[PAR_NATT_TOTAL],
+                           const int NPar, const long *ParSortID, real *ParAtt[PAR_NATT_TOTAL],
                            real (*Fluid)[FB_NXT][FB_NXT][FB_NXT], const double EdgeL[], const double dh, bool CoarseFine[],
                            const int TID, RandomNumber_t *RNG );
 extern void (*FB_End_User_Ptr)();
@@ -74,7 +74,7 @@ extern void (*FB_End_User_Ptr)();
 // Return      :  Fluid, ParAtt
 //-------------------------------------------------------------------------------------------------------
 int FB_SinkAccretion( const int lv, const double TimeNew, const double TimeOld, const double dt,
-                const int NPar, const int *ParSortID, real *ParAtt[PAR_NATT_TOTAL],
+                const int NPar, const long *ParSortID, real *ParAtt[PAR_NATT_TOTAL],
                 real (*Fluid)[FB_NXT][FB_NXT][FB_NXT], const double EdgeL[], const double dh, bool CoarseFine[],
                 const int TID, RandomNumber_t *RNG )
 {
