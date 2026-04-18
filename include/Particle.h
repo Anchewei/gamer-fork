@@ -59,7 +59,7 @@ void Aux_Error( const char *File, const int Line, const char *Func, const char *
 //                                              If a user forgets to assign `PUID` to `PUID_TBA`, we can easily detect incorrect behavior by checking if `PUID < 1`.
 //                                              Although we do have `Check_UniquePUID()` to verify uniqueness, it is not as efficient as this simple check.
 //                AttributeFlt            : Pointer arrays to different particle floating-point attributes (Mass, Pos, Vel, ...)
-//                AttributeInt            : Pointer arrays to different particle integer        attributes (Type, PUID)
+//                AttributeInt            : Pointer arrays to different particle integer        attributes (Type, Flag, PUID)
 //                InactiveParList         : List of inactive particle IDs
 //                Mesh_Attr               : Pointer arrays to different mesh quantities mapped onto tracer particles
 //                Mesh_Attr_Num           : Number of mesh quantities mapped onto tracer particles
@@ -106,8 +106,9 @@ void Aux_Error( const char *File, const int Line, const char *Func, const char *
 //                Vel                     : Particle velocity
 //                Time                    : Particle physical time
 //                Acc                     : Particle acceleration (only when STORE_PAR_ACC is on)
+//                Acc                     : Particle acceleration (only when STORE_PAR_ACC is on)
 //                Type                    : Particle type (e.g., tracer, generic, dark matter, star)
-//                PUID                    : Particle UID
+//                Flag                    : Particle refinement flag
 //
 // Method      :  Particle_t        : Constructor
 //               ~Particle_t        : Destructor
@@ -188,6 +189,7 @@ struct Particle_t
    real_par     *AccZ;
 #  endif
    long_par     *Type;
+   long_par     *Flag;
    long_par     *PUID;
 
 
@@ -429,11 +431,14 @@ struct Particle_t
 #     endif
       Type = AttributeInt[PAR_TYPE];
       PUID = AttributeInt[PAR_PUID];
+      Flag = AttributeInt[PAR_FLAG];
 
 //    initialize some arrays
       for (long p=0; p<NPar_Input; p++)
       {
+         Type[p] = PTYPE_TBA;
          PUID[p] = PUID_TBA;
+         Flag[p] = PFLAG_TBA;
       }
 
    } // METHOD : InitRepo
@@ -535,6 +540,7 @@ struct Particle_t
             AccZ = AttributeFlt[PAR_ACCZ];
 #           endif
             Type = AttributeInt[PAR_TYPE];
+            Flag = AttributeInt[PAR_FLAG];
             PUID = AttributeInt[PAR_PUID];
          }
 
