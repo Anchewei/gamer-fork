@@ -28,17 +28,20 @@ void (*Par_Init_ByFile_User_Ptr)() = Par_Init_ByFile_Default;
 //                6. The data format of the PAR_IC file is controlled by the runtime parameter "PAR_IC_FORMAT"
 //                   --> PAR_IC_FORMAT_ATT_ID: [particle attribute][particle id] in a row-major order
 //                       PAR_IC_FORMAT_ID_ATT: [particle id][particle attribute] in a row-major order
-//                7.  Load the following attributes with the specified order:
+//                7. Load the following attributes with the specified order:
 //
 //                      mass, position x/y/z, velocity x/y/z,
 //                      [, creation time (when enabling STAR_FORMATION)]
 //                      [, user-specified floating-point attributes (when PAR_NATT_FLT_USER>0]
-//                      , type, PUID
+//                      , type, flag, PUID
 //                      [, user-specified integer attributes (when PAR_NATT_INT_USER>0)]
-//                   --> The mass of all particles can be set to PAR_IC_MASS instead (by having PAR_IC_MASS>=0.0),
+//
+//                   --> The mass of all particles can be set to PAR_IC_MASS instead (by having PAR_IC_MASS >= 0.0),
 //                       in which case PAR_IC should exclude particle mass
-//                   --> The type of all particles can be set to PAR_IC_TYPE instead (by having PAR_IC_TYPE>=0),
+//                   --> The type of all particles can be set to PAR_IC_TYPE instead (by having PAR_IC_TYPE >= 0),
 //                       in which case PAR_IC should exclude particle type
+//                   --> The flag of all particles can be set to PAR_FLAG_INIT instead (by having PAR_FLAG_INIT != PFLAG_MANUAL),
+//                       in which case PAR_IC should exclude particle flag
 //                   --> The PUID of all particles can be excluded from PAR_IC by setting PAR_IC_PUID=0,
 //                       in which case PUID will be assigned automatically
 //                   --> No need to provide particle acceleration and time
@@ -88,6 +91,7 @@ void Par_Init_ByFile_Default()
    const bool SingleParMass = amr->Par->ParICMass >= 0.0;
    const bool SingleParType = amr->Par->ParICType >= 0;
    const bool AbsentParPUID = amr->Par->ParICPUID == false;
+   const bool SingleParFlag = amr->Par->FlagInit != PFLAG_MANUAL;
 
 // determine the number of attributes to be loaded
    int NParAttFlt = PAR_NATT_FLT_TOTAL - 1;   // exclude time
@@ -98,6 +102,7 @@ void Par_Init_ByFile_Default()
    if ( SingleParMass )    NParAttFlt --; // exclude mass
    if ( SingleParType )    NParAttInt --; // exclude type
    if ( AbsentParPUID )    NParAttInt --; // exclude particle UID
+   if ( SingleParFlag )    NParAttInt --; // exclude flag
 
 
 // check
@@ -231,10 +236,12 @@ void Par_Init_ByFile_Default()
       {
          if ( SingleParType  &&  v_out == PAR_TYPE )  v_out ++;
          if ( AbsentParPUID  &&  v_out == PAR_PUID )  v_out ++;
+         if ( SingleParFlag  &&  v_out == PAR_FLAG )  v_out ++;
 
          amr->Par->AttributeInt[v_out][p] = ParIntData1[v_in];
       }
 
+//    the particle flag does not need to be set here, since it will be assigned by Par_SetFlag() in Init_GAMER()
       if ( SingleParMass )    amr->Par->Mass[p] = amr->Par->ParICMass;
       if ( SingleParType )    amr->Par->Type[p] = amr->Par->ParICType;
       if ( AbsentParPUID )    amr->Par->PUID[p] = PUID_TBA;
@@ -258,8 +265,6 @@ void Par_Init_ByFile_Default()
    }
    else
       amr->Par->NextPUID = 1L;
-
-
 // free memory
    delete [] ParFltData_ThisRank;
    delete [] ParIntData_ThisRank;
