@@ -3,6 +3,8 @@
 
 
 
+#include "Macro.h"
+
 #ifndef PARTICLE
 #  error : ERROR : PARTICLE is not defined !!
 #endif

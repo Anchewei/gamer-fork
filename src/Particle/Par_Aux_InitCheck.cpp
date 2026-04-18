@@ -28,6 +28,7 @@ void Par_Aux_InitCheck()
    const real_par *Pos[3] = { amr->Par->PosX, amr->Par->PosY, amr->Par->PosZ };
    const long_par *Type   =   amr->Par->Type;
    const long_par *PUID   =   amr->Par->PUID;
+   const long_par *Flag   =   amr->Par->Flag;
 
 
 // 1. all active particles should lie within the simulation domain
@@ -52,6 +53,10 @@ void Par_Aux_InitCheck()
 //        so that Par_SetParUID() can be invoked to assign it properly
       if ( PUID[ParIdx] != PUID_TBA  &&  ( PUID[ParIdx] <= 0  ||  PUID[ParIdx] >= amr->Par->NextPUID ) )
          Aux_Error( ERROR_INFO, "PUID[%ld] = %ld (accepted range: 0<index<%ld) !!\n", ParIdx, (long)PUID[ParIdx], amr->Par->NextPUID );
+
+//    check particle flags
+      if ( Flag[ParIdx] == PFLAG_TBA )
+         Aux_Error( ERROR_INFO, "Flag[%ld] = %d (PFLAG_TBA) !!\n", ParIdx, (int)Flag[ParIdx] );
 
 //    only support tracer particles when disabling GRAVITY
 #     ifndef GRAVITY
