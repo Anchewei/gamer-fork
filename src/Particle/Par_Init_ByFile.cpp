@@ -245,6 +245,7 @@ void Par_Init_ByFile_Default()
       if ( SingleParMass )    amr->Par->Mass[p] = amr->Par->ParICMass;
       if ( SingleParType )    amr->Par->Type[p] = amr->Par->ParICType;
       if ( AbsentParPUID )    amr->Par->PUID[p] = PUID_TBA;
+      if ( SingleParFlag )    amr->Par->Flag[p] = PFLAG_TBA;   // just for clarity; already initialized to PFLAG_TBA in amr->Par->InitRepo()
 
 //    synchronize all particles to the physical time at the base level
       amr->Par->Time[p] = Time[0];
