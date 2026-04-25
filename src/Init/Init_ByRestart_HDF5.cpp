@@ -27,6 +27,7 @@ static void ResetParameter( const char *FileName, double *EndT, long *EndStep );
 
 #ifdef PARTICLE
 static bool isPUIDStored;
+static bool isPFlagStored;
 #endif
 
 
@@ -166,8 +167,11 @@ void Init_ByRestart_HDF5( const char *FileName )
       if ( KeyInfo.FormatVersion < 2473 )
          Aux_Error( ERROR_INFO, "unsupported data format version for SRHD (only support version >= 2473) !!\n" );
 #     endif
-
    }
+
+#  ifdef PARTICLE
+   isPFlagStored = KeyInfo.FormatVersion >= 2509;
+#  endif
 
    MPI_Barrier( MPI_COMM_WORLD );
 
@@ -814,6 +818,12 @@ void Init_ByRestart_HDF5( const char *FileName )
                   H5_SetID_ParIntData[v] = H5I_INVALID_HID;
                   continue;
                }
+//             skip particle flags if not stored
+               if ( v == PAR_FLAG  &&  !isPFlagStored )
+               {
+                  H5_SetID_ParIntData[v] = H5I_INVALID_HID;
+                  continue;
+               }
 
                H5_SetID_ParIntData[v] = H5Dopen( H5_GroupID_Particle, ParAttIntName[v], H5P_DEFAULT );
                if ( H5_SetID_ParIntData[v] < 0 )   Aux_Error( ERROR_INFO, "failed to open the dataset \"%s\" !!\n", ParAttIntName[v] );
@@ -924,6 +934,8 @@ void Init_ByRestart_HDF5( const char *FileName )
             for (int v=0; v<PAR_NATT_INT_STORED; v++)
             {
                if ( v == PAR_PUID  &&  !isPUIDStored )   continue;
+//             skip particle flags if not stored
+               if ( v == PAR_FLAG  &&  !isPFlagStored )  continue;
 
                H5_Status = H5Dclose( H5_SetID_ParIntData[v] );
             }
@@ -1479,6 +1491,8 @@ void LoadOnePatch( const hid_t H5_FileID, const int lv, const int GID, const boo
          }
 
          for (int p=0; p<NParThisPatch; p++)   ParIntBuf[PAR_PUID][p] = PUID_TBA;
+//       always initialize to PFLAG_NO since particle flags are unavailable
+         for (int p=0; p<NParThisPatch; p++)    ParIntBuf[PAR_FLAG][p] = PFLAG_NO;
       } // if ( FormatVersion < 2500 )
       else
       {
@@ -1495,6 +1509,12 @@ void LoadOnePatch( const hid_t H5_FileID, const int lv, const int GID, const boo
             if ( v == PAR_PUID  &&  !isPUIDStored ) // not load if there is no stored PUID
             {
                for (int p=0; p<NParThisPatch; p++)   ParIntBuf[PAR_PUID][p] = PUID_TBA;
+               continue;
+            }
+//          if particle flags are not stored, initialize to PFLAG_NO instead of loading
+            if ( v == PAR_FLAG  &&  !isPFlagStored )
+            {
+               for (int p=0; p<NParThisPatch; p++)    ParIntBuf[PAR_FLAG][p] = PFLAG_NO;
                continue;
             }
 
