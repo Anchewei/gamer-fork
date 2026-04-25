@@ -241,7 +241,6 @@ void Par_Init_ByFile_Default()
          amr->Par->AttributeInt[v_out][p] = ParIntData1[v_in];
       }
 
-//    the particle flag does not need to be set here, since it will be assigned by Par_SetFlag() in Init_GAMER()
       if ( SingleParMass )    amr->Par->Mass[p] = amr->Par->ParICMass;
       if ( SingleParType )    amr->Par->Type[p] = amr->Par->ParICType;
       if ( AbsentParPUID )    amr->Par->PUID[p] = PUID_TBA;
