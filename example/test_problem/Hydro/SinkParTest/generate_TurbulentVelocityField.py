@@ -27,7 +27,7 @@ seed       = args.seed  # random seed
 nmodes     = args.nmodes
 
 # set the number of modes
-grid       = nmodes+1
+grid       = nmodes
 
 # compute the k-space coordinates
 k1D_index  = np.arange(grid)
