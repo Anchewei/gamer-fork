@@ -13,7 +13,7 @@
 
 
 # simulation scale
-BOX_SIZE                      1.234271032596547e+17         # box size along the longest side (in Mpc/h if COMOVING is adopted)
+BOX_SIZE                      0.04                          # box size along the longest side (in Mpc/h if COMOVING is adopted)
 NX0_TOT_X                     32          # number of base-level cells along x
 NX0_TOT_Y                     32          # number of base-level cells along y
 NX0_TOT_Z                     32          # number of base-level cells along z
@@ -37,9 +37,9 @@ TESTPROB_ID                   150         # test problem ID [0]
 
 # code units (in cgs)
 OPT__UNIT                     1                 # specify code units -> must set exactly 3 basic units below [0] ##USELESS FOR COMOVING##
-UNIT_L                        1                 # length unit        (<=0 -> set to UNIT_V*UNIT_T or (UNIT_M/UNIT_D)^(1/3)) [-1.0]
-UNIT_M                        1                 # mass unit          (<=0 -> set to UNIT_D*UNIT_L^3)                        [-1.0]
-UNIT_T                        1                 # time unit          (<=0 -> set to UNIT_L/UNIT_V)                          [-1.0]
+UNIT_L                        3.08567758149e+18 # length unit        (<=0 -> set to UNIT_V*UNIT_T or (UNIT_M/UNIT_D)^(1/3)) [-1.0]
+UNIT_M                        1.9885e+33        # mass unit          (<=0 -> set to UNIT_D*UNIT_L^3)                        [-1.0]
+UNIT_T                        3.15569252e+10    # time unit          (<=0 -> set to UNIT_L/UNIT_V)                          [-1.0]
 UNIT_V                        -1                # velocity unit      (<=0 -> set to UNIT_L/UNIT_T)                          [-1.0]
 UNIT_D                        -1                # mass density unit  (<=0 -> set to UNIT_M/UNIT_L^3)                        [-1.0]
 
@@ -211,7 +211,7 @@ OPT__OUTPUT_MACH              0           # output mach number [0] ##HYDRO ONLY#
 OPT__OUTPUT_DIVMAG            0           # output |divergence(B)*dh/|B|| [0] ##MHD ONLY##
 OPT__OUTPUT_MODE              2           # (1=const step, 2=const dt, 3=dump table) -> edit "Input__DumpTable" for 3
 OUTPUT_STEP                   36           # output data every OUTPUT_STEP step ##OPT__OUTPUT_MODE==1 ONLY##
-OUTPUT_DT                     1.0452132e+11     # output data every OUTPUT_DT time interval ##OPT__OUTPUT_MODE==2 ONLY##
+OUTPUT_DT                     3.3121516         # output data every OUTPUT_DT time interval ##OPT__OUTPUT_MODE==2 ONLY##
 OUTPUT_WALLTIME              -1.0         # output data every OUTPUT_WALLTIME walltime (<=0.0=off) [-1.0]
 OUTPUT_WALLTIME_UNIT          0           # unit of OUTPUT_WALLTIME (0=second, 1=minute, 2=hour, 3=day) [0]
 OUTPUT_PART_X                -1.0         # x coordinate for OPT__OUTPUT_PART [-1.0]

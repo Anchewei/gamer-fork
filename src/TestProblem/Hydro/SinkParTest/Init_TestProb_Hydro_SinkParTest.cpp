@@ -276,10 +276,10 @@ void SetParameter() {
 
   // (2) set the problem-specific derived parameters
   SinkParTest_Core_Mass *= Const_Msun / UNIT_M;
-  SinkParTest_Cs = SQRT((Const_kB * ISO_TEMP / UNIT_E) / (MOLECULAR_WEIGHT * Const_amu / UNIT_M));
-  SinkParTest_R0 /= UNIT_L;
+  SinkParTest_Cs = SQRT((Const_kB * SinkParTest_Iso_Temp / UNIT_E) / (MOLECULAR_WEIGHT * MU_NORM / UNIT_M));
+  SinkParTest_R0 *= Const_pc / UNIT_L;
   SinkParTest_Rho0 = 3.0 * SinkParTest_Core_Mass / (4.0 * M_PI * CUBE(SinkParTest_R0));
-  SinkParTest_Omega0 /= 1 / UNIT_T;
+  SinkParTest_Omega0 *= UNIT_T;
   SinkParTest_rho_AD /= UNIT_D;
   SinkParTest_theta_B = SinkParTest_theta_B * M_PI / 180; // degree to radian
   SinkParTest_B0 /= UNIT_B;
@@ -304,10 +304,10 @@ void SetParameter() {
     Aux_Message(stdout, "=======================================================================\n");
     Aux_Message(stdout, "  test problem ID       = %d\n",             TESTPROB_ID);
     Aux_Message(stdout, "  Sound speed           = %13.7e km/s\n",    SinkParTest_Cs * UNIT_V / Const_km);
-    Aux_Message(stdout, "  R0                    = %13.7e cm\n",      SinkParTest_R0 * UNIT_L);
+    Aux_Message(stdout, "  R0                    = %13.7e pc\n",      SinkParTest_R0 * UNIT_L / Const_pc);
     Aux_Message(stdout, "  Rho0                  = %13.7e g/cm3\n",   SinkParTest_Rho0 * UNIT_D);
-    Aux_Message(stdout, "  Omega0                = %13.7e /s\n",      SinkParTest_Omega0 * UNIT_T);
-    Aux_Message(stdout, "  Core Mass             = %13.7e M_sun\n",   SinkParTest_Core_Mass / Const_Msun);
+    Aux_Message(stdout, "  Omega0                = %13.7e /s\n",      SinkParTest_Omega0 / UNIT_T);
+    Aux_Message(stdout, "  Core Mass             = %13.7e M_sun\n",   SinkParTest_Core_Mass * UNIT_M / Const_Msun);
     Aux_Message(stdout, "  B field               = %13.7e G\n",       SinkParTest_B0);
     Aux_Message(stdout, "  B angle               = %13.7e radian\n",  SinkParTest_theta_B);
     Aux_Message(stdout, "  Mach number           = %13.7e \n",        SinkParTest_Mach_num);

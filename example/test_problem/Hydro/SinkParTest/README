@@ -5,9 +5,9 @@ Enable : MODEL=HYDRO, EOS=EOS_USER, MHD, PARTICLE, GRAVITY, BAROTROPIC_EOS, STOR
 Simulation setup:
 ========================================
 1. Units (cgs):  
-    [L] = cm  
-    [M] = g  
-    [T] = s  
+    [L] = pc (3.08567758149e+18 cm)  
+    [M] = Msun (1.9885e+33 g)  
+    [T] = kyr (3.15569252e+10 s)  
   
 2. `STAR_FORMATION` parameters:  
     - `SF_CREATE_SINK_MIN_GAS_DENS`: The minimum gas density allowed to form sink particles (count/cm^3) [1.0e10].  
