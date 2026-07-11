@@ -19,7 +19,7 @@ Simulation setup:
   
 4. Create turbulence table:  
     To generate the turbulence table (`Tur_Table.dat`, even the turbulence Mach number is set to 0), run `python generate_TubulentVelocityField.py -n [n] -kmin [kmin] -seed [random seed]`, where  
-    - `n`: The power law index for turbulent energy power spectrum $\propto k^{n}$ and $k$ is the wave number.  For Kolmogorov and Burgers turbulence, $n = -11/3$ and $-4$ respectively.  
+    - `n`: The power law index for turbulent energy power spectrum $\propto k^{n}$ and $k$ is the 3D wave number.  For Kolmogorov and Burgers turbulence, $n = -11/3$ and $-4$ respectively.  
     - `kmin`: The minimum wave number.  
     - `random seed`: A random seed in order to get different turbulence realization.  
   
