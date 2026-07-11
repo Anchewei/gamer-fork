@@ -3,16 +3,12 @@
 
 // problem-specific global variables
 // =======================================================================================
-static int tur_table_NBin; // number of row in turbulence table obtained by
-                           // Aux_LoadTable
+static int tur_table_NBin; // number of row in turbulence table obtained by Aux_LoadTable
 static int size;           // turbulence cell number
 
-static double *
-    Table_Rescaled_VelX; // Table recording the rescaled velocity in x direction
-static double *
-    Table_Rescaled_VelY; // Table recording the rescaled velocity in y direction
-static double *
-    Table_Rescaled_VelZ; // Table recording the rescaled velocity in z direction
+static double *Table_Rescaled_VelX; // Table recording the rescaled velocity in x direction
+static double *Table_Rescaled_VelY; // Table recording the rescaled velocity in y direction
+static double *Table_Rescaled_VelZ; // Table recording the rescaled velocity in z direction
 
 static double SinkParTest_R0;            // The size of the cloud
 static double SinkParTest_Omega0;        // The angular velocity of the cloud
@@ -268,14 +264,13 @@ void SetParameter() {
   delete ReadPara;
 
   // (1-2) set the default values
-  size = 129;
-
   // Load the turbulence field if not restarting
   if (OPT__INIT != INIT_BY_RESTART)
     Load_Turbulence_SinkParTest();
 
-  if ((size - 1 < NX0_TOT[0]) || (size - 1 < NX0_TOT[1]) ||
-      (size - 1 < NX0_TOT[2]))
+  size = tur_table_NBin;
+
+  if ((size - 1 < NX0_TOT[0]) || (size - 1 < NX0_TOT[1]) || (size - 1 < NX0_TOT[2]))
     Aux_Error(ERROR_INFO, "size - 1 should be smaller than half of NX0_TOT_X/Y/Z !!\n");
 
   // (2) set the problem-specific derived parameters
