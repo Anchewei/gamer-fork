@@ -271,8 +271,8 @@ void SetParameter() {
 
   size = tur_table_NBin;
 
-  if ((size - 1 < NX0_TOT[0]) || (size - 1 < NX0_TOT[1]) || (size - 1 < NX0_TOT[2]))
-    Aux_Error(ERROR_INFO, "size - 1 should be smaller than half of NX0_TOT_X/Y/Z !!\n");
+  if ((size < NX0_TOT[0]) || (size < NX0_TOT[1]) || (size < NX0_TOT[2]))
+    Aux_Error(ERROR_INFO, "size should be larger than NX0_TOT_X/Y/Z !!\n");
 
   // (2) set the problem-specific derived parameters
   SinkParTest_Core_Mass *= Const_Msun / UNIT_M;
