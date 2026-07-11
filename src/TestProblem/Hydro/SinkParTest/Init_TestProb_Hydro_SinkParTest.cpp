@@ -359,13 +359,13 @@ void SetGridIC(real fluid[], const double x, const double y, const double z, con
   int j = (int)((y / amr->BoxSize[1]) * size);
   int k = (int)((z / amr->BoxSize[2]) * size);
   int index = k * SQR(size) + j * size + i;
-  if (i < 0 || i > size)
+  if (i < 0 || i >= size)
     Aux_Error(ERROR_INFO, "index is out of bound,  i = %d", i);
-  if (j < 0 || j > size)
+  if (j < 0 || j >= size)
     Aux_Error(ERROR_INFO, "index is out of bound,  j = %d", j);
-  if (k < 0 || k > size)
+  if (k < 0 || k >= size)
     Aux_Error(ERROR_INFO, "index is out of bound,  k = %d", k);
-  if (index < 0 || index > tur_table_NBin)
+  if (index < 0 || index >= tur_table_NBin)
     Aux_Error(ERROR_INFO, "index is out of bound, index = %d", index);
 
   VelX = Table_Rescaled_VelX[index];
