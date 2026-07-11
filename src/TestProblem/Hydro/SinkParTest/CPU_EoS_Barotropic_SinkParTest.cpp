@@ -387,6 +387,7 @@ static real EoS_DensTemp2Pres_Barotropic_SinkParTest( const real Dens, const rea
    const real _m_kB     = (real)AuxArray_Flt[2];
    real Cs2, Pres;
 
+   Temp = T0*( 1+ POW( Dens / SinkParTest_rho_AD, Gamma_m1 ) );
    Cs2  = Temp*_m_kB;
    Pres = Cs2*Dens;
 
