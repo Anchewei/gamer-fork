@@ -940,15 +940,9 @@ void Init_ByRestart_HDF5( const char *FileName )
             for (int v=0; v<PAR_NATT_FLT_STORED; v++)  H5_Status = H5Dclose( H5_SetID_ParFltData[v] );
             for (int v=0; v<PAR_NATT_INT_STORED; v++)
             {
-<<<<<<< SinkParticle_PrepareFinal
-               if ( v == PAR_PUID  &&  !isPUIDStored )   continue;
-//             skip particle flags if not stored
-               if ( v == PAR_FLAG  &&  !isPFlagStored )  continue;
-=======
 //             skip particle PUID/flags if not stored
                if ( v == PAR_PUID  &&  ! isPUIDStored  )    continue;
                if ( v == PAR_FLAG  &&  ! isPFlagStored )    continue;
->>>>>>> main
 
                H5_Status = H5Dclose( H5_SetID_ParIntData[v] );
             }
@@ -1503,18 +1497,12 @@ void LoadOnePatch( const hid_t H5_FileID, const int lv, const int GID, const boo
                Aux_Error( ERROR_INFO, "failed to load a particle floating-point attribute (lv %d, GID %d, v %d) !!\n", lv, GID, v );
          }
 
-<<<<<<< SinkParticle_PrepareFinal
-         for (int p=0; p<NParThisPatch; p++)   ParIntBuf[PAR_PUID][p] = PUID_TBA;
-//       always initialize to PFLAG_NO since particle flags are unavailable
-         for (int p=0; p<NParThisPatch; p++)    ParIntBuf[PAR_FLAG][p] = PFLAG_NO;
-=======
 //       always initialize to PUID_TBA/PFLAG_NO since particle PUID/flags are unavailable
          for (int p=0; p<NParThisPatch; p++)
          {
             ParIntBuf[PAR_PUID][p] = PUID_TBA;
             ParIntBuf[PAR_FLAG][p] = PFLAG_NO;
          }
->>>>>>> main
       } // if ( FormatVersion < 2500 )
 
       else

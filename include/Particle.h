@@ -197,7 +197,6 @@ struct Particle_t
    real_par     *AccZ;
 #  endif
    long_par     *Type;
-   long_par     *Flag;
    long_par     *PUID;
    long_par     *Flag;
 
@@ -551,7 +550,6 @@ struct Particle_t
             AccZ = AttributeFlt[PAR_ACCZ];
 #           endif
             Type = AttributeInt[PAR_TYPE];
-            Flag = AttributeInt[PAR_FLAG];
             PUID = AttributeInt[PAR_PUID];
             Flag = AttributeInt[PAR_FLAG];
          }

@@ -499,11 +499,7 @@
 
 // number of built-in particle attributes
 // floating-point: mass, position*3, velocity*3, and time
-<<<<<<< SinkParticle_PrepareFinal
-// integer: type and uid and flag
-=======
 // integer: type, uid, and flag
->>>>>>> main
 #  define PAR_NATT_FLT_BUILTIN0   8
 #  define PAR_NATT_INT_BUILTIN0   3
 
