@@ -124,11 +124,10 @@ static real EoS_DensEint2Pres_Barotropic_SinkParTest( const real Dens, const rea
    const real _m_kB     = (real)AuxArray_Flt[2];
    const real T0        = (real)AuxArray_Flt[3];
    const real SinkParTest_rho_AD    = (real)AuxArray_Flt[4];
-   real Temp, Cs2, Pres;
-
+   real Temp, Pres;
+   
    Temp = T0*( 1+ POW( Dens / SinkParTest_rho_AD, Gamma_m1 ) );
-   Cs2  = Temp*_m_kB;
-   Pres = Cs2*Dens;
+   Pres = Dens*_m_kB*Temp;
 
 
 // check
@@ -259,10 +258,9 @@ static real EoS_DensPres2CSqr_Barotropic_SinkParTest( const real Dens, const rea
    const real _m_kB     = (real)AuxArray_Flt[2];
    const real T0        = (real)AuxArray_Flt[3];
    const real SinkParTest_rho_AD    = (real)AuxArray_Flt[4];
-   real Temp, Cs2;
+   real Cs2;
 
-   Temp = T0*( 1+ POW( Dens / SinkParTest_rho_AD, Gamma_m1 ) );
-   Cs2  = Temp*_m_kB;
+   Cs2  = T0*_m_kB*( 1 + GAMMA*POW(Dens/SinkParTest_rho_AD, Gamma_m1) );
 
 // check
 #  ifdef GAMER_DEBUG
@@ -388,11 +386,10 @@ static real EoS_DensTemp2Pres_Barotropic_SinkParTest( const real Dens, const rea
    const real _m_kB     = (real)AuxArray_Flt[2];
    const real T0        = (real)AuxArray_Flt[3];
    const real SinkParTest_rho_AD = (real)AuxArray_Flt[4];
-   real Cs2, Pres, Temp_den;
+   real Temp_Dens, Pres;
 
-   Temp_den = T0*( 1+ POW( Dens / SinkParTest_rho_AD, Gamma_m1 ) );
-   Cs2  = Temp_den*_m_kB;
-   Pres = Cs2*Dens;
+   Temp_Dens = T0*( 1+ POW( Dens / SinkParTest_rho_AD, Gamma_m1 ) );
+   Pres = Dens*_m_kB*Temp_Dens;
 
 
 // check
