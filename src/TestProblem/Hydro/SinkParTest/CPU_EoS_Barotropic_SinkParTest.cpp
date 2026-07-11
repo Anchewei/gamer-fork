@@ -384,11 +384,14 @@ static real EoS_DensTemp2Pres_Barotropic_SinkParTest( const real Dens, const rea
                        ERROR_INFO, UNPHY_VERBOSE );
 #  endif // GAMER_DEBUG
 
+   const real Gamma_m1  = (real)AuxArray_Flt[0];
    const real _m_kB     = (real)AuxArray_Flt[2];
-   real Cs2, Pres;
+   const real T0        = (real)AuxArray_Flt[3];
+   const real SinkParTest_rho_AD = (real)AuxArray_Flt[4];
+   real Cs2, Pres, Temp_den;
 
-   Temp = T0*( 1+ POW( Dens / SinkParTest_rho_AD, Gamma_m1 ) );
-   Cs2  = Temp*_m_kB;
+   Temp_den = T0*( 1+ POW( Dens / SinkParTest_rho_AD, Gamma_m1 ) );
+   Cs2  = Temp_den*_m_kB;
    Pres = Cs2*Dens;
 
 
