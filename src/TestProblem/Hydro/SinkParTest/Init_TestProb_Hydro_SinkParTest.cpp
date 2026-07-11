@@ -182,10 +182,10 @@ void Load_Turbulence_SinkParTest() {
   const bool RowMajor_No = false; // load data into the column major
   const bool AllocMem_Yes = true; // allocate memory
 
-  int TargetCols[6] = {0, 1, 2, 3, 4, 5};
-  const int ColIdx_VelX = 3;
-  const int ColIdx_VelY = 4;
-  const int ColIdx_VelZ = 5;
+  int TargetCols[3] = {3, 4, 5};
+  const int ColIdx_VelX = 0;
+  const int ColIdx_VelY = 1;
+  const int ColIdx_VelZ = 2;
 
   double *Table_VelX, *Table_VelY, *Table_VelZ; // used to store the readed data
   double *tur_table = NULL;                     // used to store turbulence (1D)
@@ -198,7 +198,7 @@ void Load_Turbulence_SinkParTest() {
   double Total_VelZ_SQR = 0.0;
   double Vrms, Vrms_Scale; // used to rescale velocity
 
-  tur_table_NBin = Aux_LoadTable(tur_table, Tur_Table, 6, TargetCols, RowMajor_No, AllocMem_Yes);
+  tur_table_NBin = Aux_LoadTable(tur_table, Tur_Table, 3, TargetCols, RowMajor_No, AllocMem_Yes);
 
   Table_VelX = tur_table + ColIdx_VelX * tur_table_NBin;
   Table_VelY = tur_table + ColIdx_VelY * tur_table_NBin;
@@ -218,8 +218,9 @@ void Load_Turbulence_SinkParTest() {
     Total_VelZ_SQR += SQR(Table_VelZ[i]);
   }
 
-  // Vrms = SQRT( ( Vx^2 + Vy^2 + Vz^2 ) / N + ( Vx + Vy + Vz / N) ^ 2 )
-  Vrms = SQRT( (Total_VelX_SQR + Total_VelY_SQR + Total_VelZ_SQR) / tur_table_NBin - SQR((Total_VelX + Total_VelY + Total_VelZ) / tur_table_NBin));
+  // Vrms = SQRT( <Vx^2 + Vy^2 + Vz^2> - (<Vx>^2 + <Vy>^2 + <Vz>^2) )
+  Vrms = SQRT( (Total_VelX_SQR + Total_VelY_SQR + Total_VelZ_SQR) / tur_table_NBin
+             - SQR(Total_VelX / tur_table_NBin) - SQR(Total_VelY / tur_table_NBin) - SQR(Total_VelZ / tur_table_NBin) );
   Vrms_Scale = SinkParTest_Mach_num * SinkParTest_Cs / Vrms;
 
   // Rescale velocity
@@ -372,7 +373,7 @@ void SetGridIC(real fluid[], const double x, const double y, const double z, con
   VelZ = Table_Rescaled_VelZ[index];
 
   if (Rs < SinkParTest_R0) {
-    Dens = SinkParTest_Rho0 * (1 + SinkParTest_Delta_Dens * COS(2 * ATAN(dy / dx)));
+    Dens = SinkParTest_Rho0 * (1 + SinkParTest_Delta_Dens * cos(2 * atan(dy / dx)));
     VelX -= SinkParTest_Omega0 * dy;
     VelY += SinkParTest_Omega0 * dx;
   } else {
