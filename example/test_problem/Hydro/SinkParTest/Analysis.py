@@ -52,10 +52,10 @@ print( '-------------------------------------------------------------------' )
 print( ' '.join(map(str, sys.argv)) )
 print( '-------------------------------------------------------------------\n' )
 
-def ProjCol(ds, c, normal_vector, north_vector, box_size, npixel):
+def ProjCol(ds, c, normal_vector, north_vector, width, npixel):
     field = ('gamer', 'Dens')
     print("Projecting Dens...")
-    Col = yt.off_axis_projection(ds, center=c,  normal_vector=normal_vector, north_vector=north_vector, box_size=box_size,
+    Col = yt.off_axis_projection(ds, center=c,  normal_vector=normal_vector, north_vector=north_vector, width=width,
                           resolution=npixel, item=field, 
                           no_ghost=False).to('g/cm**2').value
     Col /= mu*mp.value
