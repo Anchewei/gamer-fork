@@ -412,6 +412,7 @@ void SendParticle2HomeRank( const int lv, const bool OldParOnly, const long NNew
    amr->Par->Type = amr->Par->AttributeInt[PAR_TYPE];
    amr->Par->Flag = amr->Par->AttributeInt[PAR_FLAG];
    amr->Par->PUID = amr->Par->AttributeInt[PAR_PUID];
+   amr->Par->Flag = amr->Par->AttributeInt[PAR_FLAG];
 
 
 // 6. check

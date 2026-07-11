@@ -65,7 +65,7 @@ void Aux_Error( const char *File, const int Line, const char *Func, const char *
 //                                              If a user forgets to assign `PUID` to `PUID_TBA`, we can easily detect incorrect behavior by checking if `PUID < 1`.
 //                                              Although we do have `Check_UniquePUID()` to verify uniqueness, it is not as efficient as this simple check.
 //                AttributeFlt            : Pointer arrays to different particle floating-point attributes (Mass, Pos, Vel, ...)
-//                AttributeInt            : Pointer arrays to different particle integer        attributes (Type, Flag, PUID)
+//                AttributeInt            : Pointer arrays to different particle integer        attributes (Type, PUID, Flag)
 //                InactiveParList         : List of inactive particle IDs
 //                Mesh_Attr               : Pointer arrays to different mesh quantities mapped onto tracer particles
 //                Mesh_Attr_Num           : Number of mesh quantities mapped onto tracer particles
@@ -114,6 +114,7 @@ void Aux_Error( const char *File, const int Line, const char *Func, const char *
 //                Acc                     : Particle acceleration (only when STORE_PAR_ACC is on)
 //                Acc                     : Particle acceleration (only when STORE_PAR_ACC is on)
 //                Type                    : Particle type (e.g., tracer, generic, dark matter, star)
+//                PUID                    : Particle UID
 //                Flag                    : Particle refinement flag
 //
 // Method      :  Particle_t        : Constructor
@@ -198,6 +199,7 @@ struct Particle_t
    long_par     *Type;
    long_par     *Flag;
    long_par     *PUID;
+   long_par     *Flag;
 
 
    //===================================================================================
@@ -286,6 +288,7 @@ struct Particle_t
 #     endif
       Type = NULL;
       PUID = NULL;
+      Flag = NULL;
 
    } // METHOD : Particle_t
 
@@ -550,6 +553,7 @@ struct Particle_t
             Type = AttributeInt[PAR_TYPE];
             Flag = AttributeInt[PAR_FLAG];
             PUID = AttributeInt[PAR_PUID];
+            Flag = AttributeInt[PAR_FLAG];
          }
 
          ParID = NPar_AcPlusInac;

@@ -32,6 +32,7 @@ static bool isPFlagStored;
 
 
 
+
 //-------------------------------------------------------------------------------------------------------
 // Function    :  Init_ByRestart_HDF5
 // Description :  Reload a previous HDF5 output as the initial condition
@@ -244,7 +245,7 @@ void Init_ByRestart_HDF5( const char *FileName )
    LoadField( "Par_NAttFltStored",    &KeyInfo.Par_NAttFltStored,    H5_SetID_KeyInfo, H5_TypeID_KeyInfo, NonFatal, &Par_NAttFltStored,     1,    Fatal );
    else
    LoadField( "Par_NAttFltStored",    &KeyInfo.Par_NAttFltStored,    H5_SetID_KeyInfo, H5_TypeID_KeyInfo, NonFatal, &Par_NAttFltStored,     1, NonFatal );
-   if ( isPUIDStored )
+   if ( isPUIDStored && isPFlagStored )
    LoadField( "Par_NAttIntStored",    &KeyInfo.Par_NAttIntStored,    H5_SetID_KeyInfo, H5_TypeID_KeyInfo, NonFatal, &Par_NAttIntStored,     1,    Fatal );
    else
    LoadField( "Par_NAttIntStored",    &KeyInfo.Par_NAttIntStored,    H5_SetID_KeyInfo, H5_TypeID_KeyInfo, NonFatal, &Par_NAttIntStored,     1, NonFatal );
@@ -813,7 +814,13 @@ void Init_ByRestart_HDF5( const char *FileName )
             }
             for (int v=0; v<PAR_NATT_INT_STORED; v++)
             {
-               if ( v == PAR_PUID  &&  !isPUIDStored )
+//             skip particle flags/PUID if not stored
+               if ( v == PAR_PUID  &&  ! isPUIDStored )
+               {
+                  H5_SetID_ParIntData[v] = H5I_INVALID_HID;
+                  continue;
+               }
+               if ( v == PAR_FLAG  &&  ! isPFlagStored )
                {
                   H5_SetID_ParIntData[v] = H5I_INVALID_HID;
                   continue;
@@ -933,9 +940,15 @@ void Init_ByRestart_HDF5( const char *FileName )
             for (int v=0; v<PAR_NATT_FLT_STORED; v++)  H5_Status = H5Dclose( H5_SetID_ParFltData[v] );
             for (int v=0; v<PAR_NATT_INT_STORED; v++)
             {
+<<<<<<< SinkParticle_PrepareFinal
                if ( v == PAR_PUID  &&  !isPUIDStored )   continue;
 //             skip particle flags if not stored
                if ( v == PAR_FLAG  &&  !isPFlagStored )  continue;
+=======
+//             skip particle PUID/flags if not stored
+               if ( v == PAR_PUID  &&  ! isPUIDStored  )    continue;
+               if ( v == PAR_FLAG  &&  ! isPFlagStored )    continue;
+>>>>>>> main
 
                H5_Status = H5Dclose( H5_SetID_ParIntData[v] );
             }
@@ -1490,10 +1503,20 @@ void LoadOnePatch( const hid_t H5_FileID, const int lv, const int GID, const boo
                Aux_Error( ERROR_INFO, "failed to load a particle floating-point attribute (lv %d, GID %d, v %d) !!\n", lv, GID, v );
          }
 
+<<<<<<< SinkParticle_PrepareFinal
          for (int p=0; p<NParThisPatch; p++)   ParIntBuf[PAR_PUID][p] = PUID_TBA;
 //       always initialize to PFLAG_NO since particle flags are unavailable
          for (int p=0; p<NParThisPatch; p++)    ParIntBuf[PAR_FLAG][p] = PFLAG_NO;
+=======
+//       always initialize to PUID_TBA/PFLAG_NO since particle PUID/flags are unavailable
+         for (int p=0; p<NParThisPatch; p++)
+         {
+            ParIntBuf[PAR_PUID][p] = PUID_TBA;
+            ParIntBuf[PAR_FLAG][p] = PFLAG_NO;
+         }
+>>>>>>> main
       } // if ( FormatVersion < 2500 )
+
       else
       {
          for (int v=0; v<PAR_NATT_FLT_STORED; v++)
@@ -1506,9 +1529,15 @@ void LoadOnePatch( const hid_t H5_FileID, const int lv, const int GID, const boo
          }
          for (int v=0; v<PAR_NATT_INT_STORED; v++)
          {
-            if ( v == PAR_PUID  &&  !isPUIDStored ) // not load if there is no stored PUID
+//          if particle PUID/flags are not stored, initialize to PUID_TBA/PFLAG_NO instead of loading
+            if ( v == PAR_PUID  &&  ! isPUIDStored )
             {
-               for (int p=0; p<NParThisPatch; p++)   ParIntBuf[PAR_PUID][p] = PUID_TBA;
+               for (int p=0; p<NParThisPatch; p++)    ParIntBuf[PAR_PUID][p] = PUID_TBA;
+               continue;
+            }
+            if ( v == PAR_FLAG  &&  ! isPFlagStored )
+            {
+               for (int p=0; p<NParThisPatch; p++)    ParIntBuf[PAR_FLAG][p] = PFLAG_NO;
                continue;
             }
 //          if particle flags are not stored, initialize to PFLAG_NO instead of loading
@@ -1828,7 +1857,7 @@ void Check_SymConst( const char *FileName, const int FormatVersion )
    LoadField( "Par_NAttFltStored",    &RS.Par_NAttFltStored,    SID, TID, NonFatal, &RT.Par_NAttFltStored,     1,    Fatal );
    else
    LoadField( "Par_NAttFltStored",    &RS.Par_NAttFltStored,    SID, TID, NonFatal, &RT.Par_NAttFltStored,     1, NonFatal );
-   if ( isPUIDStored )
+   if ( isPUIDStored && isPFlagStored )
    LoadField( "Par_NAttIntStored",    &RS.Par_NAttIntStored,    SID, TID, NonFatal, &RT.Par_NAttIntStored,     1,    Fatal );
    else
    LoadField( "Par_NAttIntStored",    &RS.Par_NAttIntStored,    SID, TID, NonFatal, &RT.Par_NAttIntStored,     1, NonFatal );

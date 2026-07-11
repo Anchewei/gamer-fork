@@ -33,17 +33,27 @@ void (*Par_Init_ByFile_User_Ptr)() = Par_Init_ByFile_Default;
 //                      mass, position x/y/z, velocity x/y/z,
 //                      [, creation time (when enabling STAR_FORMATION)]
 //                      [, user-specified floating-point attributes (when PAR_NATT_FLT_USER>0]
+<<<<<<< SinkParticle_PrepareFinal
 //                      , type, flag, PUID
+=======
+//                      , type, PUID, flag
+>>>>>>> main
 //                      [, user-specified integer attributes (when PAR_NATT_INT_USER>0)]
 //
 //                   --> The mass of all particles can be set to PAR_IC_MASS instead (by having PAR_IC_MASS >= 0.0),
 //                       in which case PAR_IC should exclude particle mass
 //                   --> The type of all particles can be set to PAR_IC_TYPE instead (by having PAR_IC_TYPE >= 0),
 //                       in which case PAR_IC should exclude particle type
+<<<<<<< SinkParticle_PrepareFinal
 //                   --> The flag of all particles can be set to PAR_FLAG_INIT instead (by having PAR_FLAG_INIT != PFLAG_MANUAL),
 //                       in which case PAR_IC should exclude particle flag
 //                   --> The PUID of all particles can be excluded from PAR_IC by setting PAR_IC_PUID=0,
+=======
+//                   --> The PUID of all particles can be excluded from PAR_IC by setting PAR_IC_PUID = 0,
+>>>>>>> main
 //                       in which case PUID will be assigned automatically
+//                   --> The flag of all particles can be set to PAR_FLAG_INIT instead (by having PAR_FLAG_INIT != PFLAG_MANUAL),
+//                       in which case PAR_IC should exclude particle flag
 //                   --> No need to provide particle acceleration and time
 //                8. For LOAD_BALANCE, the number of particles in each rank must be set in advance
 //                   --> Currently it's set by Init_Parallelization()
@@ -243,8 +253,13 @@ void Par_Init_ByFile_Default()
 
       if ( SingleParMass )    amr->Par->Mass[p] = amr->Par->ParICMass;
       if ( SingleParType )    amr->Par->Type[p] = amr->Par->ParICType;
+<<<<<<< SinkParticle_PrepareFinal
       if ( AbsentParPUID )    amr->Par->PUID[p] = PUID_TBA;
       if ( SingleParFlag )    amr->Par->Flag[p] = PFLAG_TBA;   // just for clarity; already initialized to PFLAG_TBA in amr->Par->InitRepo()
+=======
+      if ( AbsentParPUID )    amr->Par->PUID[p] = PUID_TBA;    // just for clarity; already initialized to PUID_TBA/PFLAG_TBA in amr->Par->InitRepo()
+      if ( SingleParFlag )    amr->Par->Flag[p] = PFLAG_TBA;   // ...
+>>>>>>> main
 
 //    synchronize all particles to the physical time at the base level
       amr->Par->Time[p] = Time[0];
