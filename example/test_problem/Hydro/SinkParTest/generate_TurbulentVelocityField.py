@@ -30,40 +30,33 @@ nmodes     = args.nmodes
 grid       = nmodes
 
 # compute the k-space coordinates
-k1D_index  = np.arange(grid)
-k1D        = np.where( k1D_index > nmodes/2, k1D_index-nmodes-1, k1D_index ) # if index > nmodes/2, map to negative frequencies
-kz, ky, kx = np.meshgrid( k1D, k1D, k1D, indexing='ij' )
+k1D_index  = np.fft.fftfreq(grid) * grid
+k1D_r      = np.fft.rfftfreq(grid) * grid
+kz, ky, kx = np.meshgrid( k1D_index, k1D_index, k1D_r, indexing='ij' )
 k          = np.sqrt( kx**2 + ky**2 + kz**2 )
 
 # get the random numbers following a specific order
 np.random.seed(seed)
-sampledRandomNumbers_Normals = np.zeros((3,grid,grid,grid))
-sampledRandomNumbers_Randoms = np.zeros((3,grid,grid,grid))
-getNormals = ~( (kz < 0) | ((kz == 0) & (ky < 0)) | ((kz == 0) & (ky == 0) & (kx < 0)) | ((kz == 0) & (ky == 0) & (k < kmin)) ).ravel()
-getRandoms = ~( (kz < 0) | ((kz == 0) & (ky < 0)) | ((kz == 0) & (ky == 0) & (kx < 0)) ).ravel()
-for i in range(0, grid**3):
-    sampledRandomNumbers_Normals[0,].ravel()[i] = np.random.normal() if getNormals[i] else 0
-    sampledRandomNumbers_Normals[1,].ravel()[i] = np.random.normal() if getNormals[i] else 0
-    sampledRandomNumbers_Normals[2,].ravel()[i] = np.random.normal() if getNormals[i] else 0
-    sampledRandomNumbers_Randoms[0,].ravel()[i] = np.random.random() if getRandoms[i] else 0
-    sampledRandomNumbers_Randoms[1,].ravel()[i] = np.random.random() if getRandoms[i] else 0
-    sampledRandomNumbers_Randoms[2,].ravel()[i] = np.random.random() if getRandoms[i] else 0
+rfft_shape = kx.shape
+sampledRandomNumbers_Normals = np.random.standard_normal((3, *rfft_shape))
+sampledRandomNumbers_Randoms = np.random.uniform(0, 1, size=(3, *rfft_shape))
 
 # compute the amplitudes, a power law spectrum of the form A(k) = A0 * k**vel_n
-A0           = 1
-A            = np.zeros((3,grid,grid,grid)) # initialize A
-highK        = (k >= kmin)                  # high-k filter
-A[0,][highK] = A0 * sampledRandomNumbers_Normals[0,][highK] * k[highK]**vel_n
-A[1,][highK] = A0 * sampledRandomNumbers_Normals[1,][highK] * k[highK]**vel_n
-A[2,][highK] = A0 * sampledRandomNumbers_Normals[2,][highK] * k[highK]**vel_n
+A0    = 1.0
+A     = np.zeros((3, *rfft_shape)) # initialize A
+highK = (k >= kmin)                # high-k filter
+
+A[0][highK] = A0 * sampledRandomNumbers_Normals[0][highK] * k[highK]**vel_n
+A[1][highK] = A0 * sampledRandomNumbers_Normals[1][highK] * k[highK]**vel_n
+A[2][highK] = A0 * sampledRandomNumbers_Normals[2][highK] * k[highK]**vel_n
 
 # compute the phases
-phase        = 2 * np.pi * sampledRandomNumbers_Randoms
+phase = 2 * np.pi * sampledRandomNumbers_Randoms
 
-# compute the velocities
-vx           = np.fft.ifftn( A[0,]*( np.cos(phase[0,]) + 1j*np.sin(phase[0,]) ) ).real
-vy           = np.fft.ifftn( A[1,]*( np.cos(phase[1,]) + 1j*np.sin(phase[1,]) ) ).real
-vz           = np.fft.ifftn( A[2,]*( np.cos(phase[2,]) + 1j*np.sin(phase[2,]) ) ).real
+# compute the velocities using irfftn to enforce Hermitian symmetry
+vx = np.fft.irfftn( A[0] * np.exp(1j * phase[0]), s=(grid, grid, grid) )
+vy = np.fft.irfftn( A[1] * np.exp(1j * phase[1]), s=(grid, grid, grid) )
+vz = np.fft.irfftn( A[2] * np.exp(1j * phase[2]), s=(grid, grid, grid) )
 
 # compute the x-space coordinates
 z, y, x      = np.meshgrid( np.linspace(-1, 1, grid), np.linspace(-1, 1, grid), np.linspace(-1, 1, grid), indexing='ij')
