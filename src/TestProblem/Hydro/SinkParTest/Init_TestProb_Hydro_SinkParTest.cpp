@@ -269,7 +269,10 @@ void SetParameter() {
   if (OPT__INIT != INIT_BY_RESTART)
     Load_Turbulence_SinkParTest();
 
-  size = tur_table_NBin;
+  size = (int)round( cbrt(tur_table_NBin) );
+
+  if ( size * size * size != tur_table_NBin )
+     Aux_Error( ERROR_INFO, "tur_table_NBin (%d) is not a perfect cube (size = %d) !!\n", tur_table_NBin, size );
 
   if ((size < NX0_TOT[0]) || (size < NX0_TOT[1]) || (size < NX0_TOT[2]))
     Aux_Error(ERROR_INFO, "size should be larger than NX0_TOT_X/Y/Z !!\n");

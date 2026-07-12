@@ -59,7 +59,7 @@ vy = np.fft.irfftn( A[1] * np.exp(1j * phase[1]), s=(grid, grid, grid) )
 vz = np.fft.irfftn( A[2] * np.exp(1j * phase[2]), s=(grid, grid, grid) )
 
 # compute the x-space coordinates
-z, y, x      = np.meshgrid( np.linspace(-1, 1, grid), np.linspace(-1, 1, grid), np.linspace(-1, 1, grid), indexing='ij')
+z, y, x      = np.meshgrid( np.linspace(-1, 1, grid, endpoint=False), np.linspace(-1, 1, grid, endpoint=False), np.linspace(-1, 1, grid, endpoint=False), indexing='ij')
 
 # save to the file
 np.savetxt( "Tur_Table.dat",
