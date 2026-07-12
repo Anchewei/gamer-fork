@@ -290,7 +290,7 @@ void SetParameter() {
   // (3) reset other general-purpose parameters
   //     --> a helper macro PRINT_WARNING is defined in TestProb.h
   const long End_Step_Default = __INT_MAX__;
-  const double End_T_Default = 1.3065165e+12;
+  const double End_T_Default = 1.3065165e+12 / UNIT_T; // 2.5 tff
 
   if (END_STEP < 0) {
     END_STEP = End_Step_Default;
