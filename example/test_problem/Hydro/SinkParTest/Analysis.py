@@ -100,16 +100,16 @@ for index_id in index_list:
     print('Simulation time = %.2f kyr'%(ds.current_time.to('kyr')))
 
     # Initial cloud parameters
-    R0        = ds.parameters['SinkParTest_R0'] # cm
-    Core_Mass = ds.parameters['SinkParTest_Core_Mass'] # g
+    R0        = ds.parameters['SinkParTest_R0'] # pc
+    Core_Mass = ds.parameters['SinkParTest_Core_Mass'] # Msun
     mu        = ds.parameters['MolecularWeight']
 
     # Get the free-fall time
-    tff = free_fall_time(R0*u.cm, Core_Mass*u.g)
+    tff = free_fall_time(R0*u.pc, Core_Mass*u.Msun)
     
     # Projection box size and center
-    box_size = ds.domain_width.to("cm") # cm, for x, y and z
-    c = ds.domain_center.value*u.cm
+    box_size = ds.domain_width.to("pc") # pc, for x, y and z
+    c = ds.domain_center.value*u.pc
     
     print("Center = ", c.to("pc"))
     print("Box size for projection = ", box_size.to("pc"))
