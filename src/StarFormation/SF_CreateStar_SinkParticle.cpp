@@ -197,11 +197,10 @@ bool JeansInstability_BoundState(const int pi, const int pj, const int pk, const
       if (SQRT(SQR(vij - pi) + SQR(vjj - pj) + SQR(vkj - pk)) > AccCellNum)
         continue;
 
-      int rijPix = SQRT(SQR(vi - vij) + SQR(vj - vjj) + SQR(vk - vkj));
-      if (rijPix == 0)
+      if (vi == vij && vj == vjj && vk == vkj)
         continue;
 
-      real rij = rijPix * dh;
+      real rij = SQRT(SQR(vi - vij) + SQR(vj - vjj) + SQR(vk - vkj)) * dh;
 
       for (int v = 0; v < NSinkVar; v++)
         ControlFluidj[v] = Flu_Array_F_In[v][vkj][vjj][vij];
