@@ -316,7 +316,7 @@ void SetParameter() {
     Aux_Message(stdout, "  Mach number           = %13.7e \n",        SinkParTest_Mach_num);
     Aux_Message(stdout, "  Turbulence table      = %s\n",             Tur_Table);
     Aux_Message(stdout, "  Iso_Temp              = %13.7e K\n",       SinkParTest_Iso_Temp);
-    Aux_Message(stdout, "  rho_AD                = %13.7e g/cm3\n",   SinkParTest_rho_AD);
+    Aux_Message(stdout, "  rho_AD                = %13.7e g/cm3\n",   SinkParTest_rho_AD * UNIT_D);
     Aux_Message(stdout, "=======================================================================\n");
   }
 
